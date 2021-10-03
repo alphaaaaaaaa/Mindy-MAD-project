@@ -1,0 +1,33 @@
+{% load static %}
+
+{% if messages.5.id != null %}
+<a href="javascript:void(0)" id="load_messages" data-count="{{count}}">load more</a>
+{% endif %}
+
+{% for message in messages reversed %}
+{% if message.user == request.user %}
+<div class="message me">
+    <div class="text-main">
+        <div class="text-group me">
+            <div class="text me">
+                <p>{{ message.content }}</p>
+            </div>
+        </div>
+        <span style="color: grey;">{{ message.timestamp }}</span>
+    </div>
+</div>
+{% else %}
+<div class="message">
+    <img class="avatar-md" src="{% static user_profile.profile_image %}" data-toggle="tooltip" data-placement="top"
+        title="{{ user_profile.status }}" alt="avatar">
+    <div class="text-main">
+        <div class="text-group">
+            <div class="text">
+                <p>{{ message.content }}</p>
+            </div>
+        </div>
+        <span style="color: grey;">{{ message.timestamp }}</span>
+    </div>
+</div>
+{% endif %}
+{% endfor %}

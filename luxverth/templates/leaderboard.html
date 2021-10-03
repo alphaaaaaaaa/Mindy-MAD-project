@@ -1,0 +1,185 @@
+{% load static %}
+
+<h3 class="title" style="text-align: center;">Last season winners</h3>
+<div class="row" style="text-align: center;">
+<div class="col-lg-4 col-md-4 col-sm-6">
+    <div class="card">
+        <br>
+        <div class="card-user" style="text-align: center;">
+            <img class="avatar" src="/static/img/profile/about_lft.png" style="max-width: 110px; max-height: 110px ;border-radius: 100%;"
+            alt="Card image">
+            <div class="top-right">
+                <img  src="/static/img/icons/2e42210587bfc22de5e8cf9dc461b3c4-first-rank-badge-olympic-by-vexels.png" style="max-width: 70px; max-height: 70px ;"
+            alt="Card image">
+            </div>
+            <h5><b>Michal Krajewaski</b></h5>
+            <p>newbie</p>
+            <div class="rounded" style="background-color:#2b3553; margin-left: 20%;margin-right: 20%;">
+                <span >
+                    <img src="{% static 'img/icons/1113281-200.png' %}" style="min-width:30px; max-width: 50px;">
+                </span>
+                <span style="color: white;">
+                      ${{ user_profile.worth }}
+                </span>
+            </div>
+            <br>
+            <div class="rounded" style="background-color:#2b3553; margin-left: 20%;margin-right: 20%;">
+              <span >
+                  <img src="{% static 'img/icons/82735-200.png' %}" style="min-width:30px; max-width: 50px;">
+              </span>
+              <span style="color: white;">
+                    {{ user_profile.follower_count }}23423434
+              </span>
+          </div>
+        </div>
+        <div class="card-body" style="text-align: center;">
+           
+        </div>
+    </div>
+</div>
+<div class="col-lg-4 col-md-4 col-sm-6">
+    <div class="card">
+        <br>
+        <div class="card-user" style="text-align: center;">
+            <img class="avatar" src="/static/img/profile/about_lft.png" style="max-width: 110px; max-height: 110px ;border-radius: 100%;"
+            alt="Card image">
+            <div class="top-right">
+                <img  src="/static/img/icons/award-41583_1280.webp" style="max-width: 70px; max-height: 70px ;"
+            alt="Card image">
+            </div>
+            <h5><b>Michal Krajewaski</b></h5>
+            <p>newbie</p>
+            <div class="rounded" style="background-color:#2b3553; margin-left: 20%;margin-right: 20%;">
+                <span >
+                    <img src="{% static 'img/icons/1113281-200.png' %}" style="min-width:30px; max-width: 50px;">
+                </span>
+                <span style="color: white;">
+                      ${{ user_profile.worth }}
+                </span>
+            </div>
+            <br>
+            <div class="rounded" style="background-color:#2b3553; margin-left: 20%;margin-right: 20%;">
+              <span >
+                  <img src="{% static 'img/icons/82735-200.png' %}" style="min-width:30px; max-width: 50px;">
+              </span>
+              <span style="color: white;">
+                {{ user_profile.follower_count }}356254
+              </span>
+          </div>
+        </div>
+        <div class="card-body" style="text-align: center;">
+           
+        </div>
+    </div>
+</div>
+<div class="col-lg-4 col-md-4 col-sm-6">
+    <div class="card">
+        <br>
+        <div class="card-user" style="text-align: center;">
+            <img class="avatar" src="/static/img/profile/about_lft.png" style="max-width: 110px; max-height: 110px ;border-radius: 100%;"
+            alt="Card image">
+            <div class="top-right">
+                <img  src="/static/img/icons/clipart43541.png" style="max-width: 70px; max-height: 70px ;"
+            alt="Card image">
+            </div>
+            <h5><b>Michal Krajewaski</b></h5>
+            <p>newbie</p>
+            <div class="rounded" style="background-color:#2b3553; margin-left: 20%;margin-right: 20%;">
+                <span >
+                    <img src="{% static 'img/icons/1113281-200.png' %}" style="min-width:30px; max-width: 50px;">
+                </span>
+                <span style="color: white;">
+                      ${{ user_profile.worth }}
+                </span>
+            </div>
+            <br>
+            <div class="rounded" style="background-color:#2b3553; margin-left: 20%;margin-right: 20%;">
+              <span >
+                  <img src="{% static 'img/icons/82735-200.png' %}" style="min-width:30px; max-width: 50px;">
+              </span>
+              <span style="color: white;">
+                {{ user_profile.follower_count }}6567
+              </span>
+          </div>
+            
+        </div>
+        <div class="card-body" style="text-align: center;">
+           
+        </div>
+    </div>
+</div>
+</div>
+<div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="tools float-right">
+          <div class="dropdown">
+            <button type="button" class="btn btn-default dropdown-toggle btn-link btn-icon" data-toggle="dropdown">
+              <i class="tim-icons icon-settings-gear-63"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+              <a class="dropdown-item" href="#">Action</a>
+              <a class="dropdown-item" href="#">Another action</a>
+              <a class="dropdown-item" href="#">Something else here</a>
+              <a class="dropdown-item text-danger" href="#">Remove Data</a>
+            </div>
+          </div>
+        </div>
+        <h4 class="title" style="text-align: center;">Current Season Leaderboard</h4>
+      </div>
+    </div>
+</div>
+<div class="col-md-12">
+    <div class="card">
+      
+      <div class="card-body">
+        <div class="table-responsive ps">
+          <table class="table">
+            <thead class="text-primary">
+              <tr>
+                <th class="text-center">
+                  #
+                </th>
+                
+                <th>
+                  Name
+                </th>
+                <th class="text-center">
+                  <img src="{% static 'img/icons/82735-200.png' %}" style="min-width:30px; max-width: 50px;">
+                  Followers
+                </th>
+                
+                <th class="text-right">
+                  <img src="{% static 'img/icons/1113281-200.png' %}" style="min-width:30px; max-width: 50px;">
+                  Worth
+                </th>
+                
+              </tr>
+            </thead>
+            <tbody>
+              {% for person in peoples %}
+              <tr>
+                <td class="text-center">
+                  <div class="photo">
+                    #
+                  </div>
+                </td>
+                <td class="">
+                    <img class="avatar" style="max-width: 30px; max-height: 30px;" src="{% static person.profile_image %}" alt="Table image">
+                     {{ person.user.username }}
+                </td>
+                <td class="text-center">
+                   {{ person.follower_count }}
+                </td>
+                
+                <td class="text-right">
+                  ${{ person.worth }}
+                </td>
+                {% endfor %}
+              </tr>
+            </tbody>
+          </table>
+        <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div>
+      </div>
+    </div>
+  </div>

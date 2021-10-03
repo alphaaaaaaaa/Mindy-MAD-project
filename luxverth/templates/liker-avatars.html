@@ -1,0 +1,8 @@
+{% load static %}
+{% for liker in post.liker_users.all%}
+<li class="likers-avatars{{ post.id }}">
+  <a href="javascript:void(0)">
+    <img src="{% static liker.user_details.profile_image %}" alt="friend">
+  </a>
+</li>
+{% endfor %}

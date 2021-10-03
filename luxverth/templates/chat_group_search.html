@@ -1,0 +1,59 @@
+{% load static %}
+{% if artists %}
+<div class="modal-body" style="margin-top:-30px">
+    <ul>
+        {% for artist in artists %}
+        <div class="row">
+            <div class="col-12">
+                <span style=" color: black ;font-size: 16px;margin-top: 20px;"><a data-toggle="modal" data-target="#group{{ artist.id }}" href="">{{ artist.group_name }}</a></span>
+                <span style="font-size: 11px; float:right;"><a  data-toggle="modal" data-target="#group{{ artist.id }}" href="#" class="btn btn-danger animation-on-hover" style="display: block; width: 100%;padding: 10px;">
+                    <i class="tim-icons icon-check-2"></i> view profile
+                </a></span>
+                
+            </div>
+        </div>
+        <div class="modal fade" id="group{{ artist.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="requests">
+                    <div class="title">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i class="tim-icons icon-simple-remove"></i>
+                        </button>
+                    </div>
+                    <div class="content">
+                        <img id="profile_image" src="{{ artist.image.url }}" width="100%">
+                        <div class="row">
+                          <div class="card-user col-12">
+                
+                            <form id="form" action="/change_group_image/" method="POST" enctype="multipart/form-data">
+                              <input type="hidden" name="id" id="id">
+                
+                              {% csrf_token %}
+                              group admin:{{artist.group_admin}}
+                              {% if artist.group_admin == user %}
+                              <input type="file" accept="image/*" name="myfile" id="change_image" onchange="loadFile(event)"
+                                style="display: none;">
+                              <label class="btn btn-warning animation-on-hover" style="width:100%;" for="change_image"
+                                style="cursor: pointer;">Upload Image</label>
+                              {% endif %}
+                            </form>
+                          </div>
+                        </div>
+                        <p>Group Description:</p>
+                        <p>{{ artist.description }}</p>
+                        <a href="/messenger/{{ artist.id }}?t=group" class="btn btn-danger animation-on-hover" style="display: block; width: 100%;padding: 10px;">
+                            <i class="tim-icons icon-check-2"></i> Join Chat
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+<script>
+    document.getElementById("change_image").onchange = function () {
+      document.getElementById("form").submit();
+    };
+</script>

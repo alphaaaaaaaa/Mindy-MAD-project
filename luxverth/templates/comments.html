@@ -1,0 +1,132 @@
+{% load static %}
+{% for comment in post.comments.all %}
+      {% if forloop.counter == count %}<button type="button" name="load_comments" style="width: 98%;" data-type="comments" data-post-id="{{ post.id }}" data-count="{{ count }}" data-count2="{{ count2 }}" class="btn load_comments" >Load more comments </button>
+      
+      {% elif forloop.counter > count %}
+      <p></p>
+      {% else %}
+      <span class="comment{{comment.id}}">
+        <div class="row" >
+          <div class="card-user col-12">
+            <a  href="/profile/{{comment.user }}">
+            <span><img class="avatar" src="{% static comment.user.user_details.profile_image %}" style="height: 50px; width: 50px;"
+                alt="Card image"></span>
+            <span>{{ comment.user.user_details.name }}</span></a>
+            <span style="font-size: 11px;">{{ comment.comment_text }}</span>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-2"></div>
+          <div style="padding-right: 5px;">
+            <a href="javascript:void(0);" class="reply" data-comment-id="{{ comment.id }}">
+              reply 
+            </a>
+          </div>
+          <div class="" style="padding-right: 5px;">
+            <a href="javascript:void(0);" class="comment-like like-button {% if user in comment.comment_likers.all %}is-active{% endif %}" data-id="{{ comment.id }}" data-reply-id="null" data-post-id="{{ post.id }}"  data-like-on ='comment' style="width: 18px;height: 18px; color:black">
+              <i class="tim-icons icon-heart-2  not-liked bouncy" style="font-size: 10px;"></i>
+              <i class="tim-icons icon-heart-2 is-liked bouncy" style="font-size: 10px;"></i>
+              <span class="like-overlay"></span>
+            </a>
+          </div>
+          <div style="padding-right: 5px;">
+            <p id="comment_like_count{{comment.id}}">
+              {{comment.like_count}}
+            </p>
+          </div>
+          <div style="padding-right: 5px;">
+            <div class="dropdown">
+              <button type="button" class="btn btn-default dropdown-toggle btn-link btn-icon"
+                data-toggle="dropdown" aria-expanded="false">
+                <i class="tim-icons icon-settings-gear-63"></i>
+              </button>
+              <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end"
+                style="position: absolute; transform: translate3d(-133px, 22px, 0px); top: 0px; left: 0px; will-change: transform;">
+                <a class="dropdown-item" href="#">Report</a>
+                {% if comment.user == user %}<a class="delete dropdown-item" data-delete-t="comment"  data-id="{{ comment.id }}" data-post-id="{{ post.id }}" href="javascript:void(0)">Delete</a> {% endif %}
+              </div>
+            </div>
+          </div>
+          <div class="" style="padding-right: 5px;  right: 10px;">
+            <p style="font-size: 9px;">
+             {{ comment.created_on }}
+            </p>
+          </div>
+          <div class="reply-box{{comment.id}}" style="margin-left: 15px;">
+            {% for reply in comment.replies.all %}
+            {% if forloop.counter == count2 %}<button type="button" name="load_comments" style="width: 98%;" data-type="replies" data-post-id="{{ post.id }}" data-count="{{ count }}" data-count2="{{ count2 }}" class="btn load_comments" >Load more comments </button>
+      
+            {% elif forloop.counter > count2 %}
+            <p></p>
+            {% else %}
+            <span class="reply{{ reply.id }}">
+            <div class="card-user col-12">
+              <a  href="/profile/{{reply.user }}">
+              <span><img class="avatar" src="{% static reply.user.user_details.profile_image %}" style="height: 40px; width: 40px;"
+                  alt="Card image"></span>
+              <span style="font-size: 13px; color: black">{{ reply.user.user_details.name }}</span></a>
+              <span style="font-size: 11px; color: black;">{{ reply.reply_text }}</span>
+            </div>
+
+            <div class="row" style="margin-left:30px ;">
+              <div style="padding-right: 5px;">
+                <a href="javascript:void(0);" >
+                  reply
+                </a>
+              </div>
+              <div class="" style="padding-right: 5px;">
+                <a href="javascript:void(0);" class="comment-like like-button {% if user in reply.reply_likers.all %}is-active{% endif %}" data-reply-id="{{reply.id}}" data-post-id="{{ post.id }}" data-id="{{ comment.id }}" data-like-on ='reply'
+                  style="width: 18px;height: 18px; color:black">
+                  <i class="tim-icons icon-heart-2 material-icons not-liked bouncy" style="font-size: 10px;"></i>
+                  <i class="tim-icons icon-heart-2 material-icons is-liked bouncy" style="font-size: 10px;"></i>
+                  <span class="like-overlay"></span>
+                </a>
+              </div>
+              <div style="padding-right: 5px;">
+                <p id="reply_like_count{{ reply.id }}">
+                  {{ reply.like_count }}
+                </p>
+              </div>
+              <div style="padding-right: 5px;">
+                <div class="dropdown">
+                  <button type="button" class="btn btn-default dropdown-toggle btn-link btn-icon"
+                    data-toggle="dropdown" aria-expanded="false">
+                    <i class="tim-icons icon-settings-gear-63"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end"
+                    style="position: absolute; transform: translate3d(-133px, 22px, 0px); top: 0px; left: 0px; will-change: transform;">
+                    <a class="dropdown-item" href="#">Action</a>
+                    {% if reply.user == user %}<a class="delete dropdown-item" data-delete-t="reply"  data-id="{{ reply.id }}" data-post-id="{{ post.id }}" href="javascript:void(0)">Delete</a> {% endif %}
+                  </div>
+                </div>
+              </div>
+              <div>
+                <p style="font-size: 9px;">
+                   {{ reply.created_on }}
+                </p>
+              </div>
+            </div>
+            </span>
+            {%endif%}
+            {% endfor %}
+          </div>
+        </div>
+        <div id="reply_input{{ comment.id }}" style="display: none;">
+          <div class="row">
+            <div class="col-10">
+              <div class="form-group">
+                <input type="text" style="border-radius: 0; " class="form-control " id="reply-input{{ comment.id }}"
+                  placeholder="comment...">
+              </div>
+            </div>
+            <div class="">
+              <button  class="reply-button btn-danger animation-on-hover" style="padding:7px;" data-post-id="{{ post.id }}" data-comment-id="{{ comment.id }}">
+                <i class="tim-icons icon-send"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        </span>
+        {% endif %}
+      {% endfor %}

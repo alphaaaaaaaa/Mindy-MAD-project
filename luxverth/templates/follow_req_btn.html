@@ -1,0 +1,16 @@
+{% if person in request.user.user_details.follow_requests.all %}
+<button class="btn btn-warning animation-on-hover accept" data-id="{{ person.id }}"
+  style="width: 100%;font-size: 11px;">
+  <i class="tim-icons icon-check-2"></i>Accept
+</button>
+{% elif person in request.user.user_details.followers.all %}
+<button class="btn btn-success animation-on-hover accept" data-id="{{ person.id }}"
+  style="width: 100%;font-size: 11px;">
+  <i class="tim-icons icon-simple-remove"></i> Remove
+</button>
+{% else %}
+<button class="btn btn-danger animation-on-hover accept" data-id="{{ person.id }}"
+  style="width: 100%;font-size: 11px;">
+  <i class="tim-icons icon-check-2"></i> Removed
+</button>
+{% endif %}

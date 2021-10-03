@@ -1,0 +1,739 @@
+{% load static %}
+{% include 'base.html' %}
+<style>
+  .pimage {
+    opacity: 1;
+    width: 100%;
+    height: auto;
+    transition: .5s ease;
+    backface-visibility: hidden;
+  }
+
+  .pimage:hover {
+    opacity: 0.3;
+  }
+</style>
+<div class="rtl menu-on-right">
+  <div class="sidebar" id="right_sidebar">
+    <!--
+              Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red"
+          -->
+    <div class="sidebar-wrapper scrollbar sidebarr" id="style-4"
+      style="background-color: white; border-radius: 5px; overflow:scroll;">
+      <div class="card-user">
+        <div class="card-body">
+          <p class="card-text">
+          </p>
+          <div class="author" style="width: 100%;">
+            <div class="block block-one"></div>
+            <div class="block block-two"></div>
+            <div class="block block-three"></div>
+            <div class="block block-four"></div>
+            <a href="javascript:void(0)" class="view-image" data-id="0"
+              data-src="{% static user_profile.profile_image %}" data-toggle="modal" data-target=".profile-image-modal">
+              <img class="avatar pimage" src="{% static user_profile.profile_image  %}"
+                style=" border-radius: 0%; width: 200px; height: 200px; border-width: 7px;" alt="...">
+            </a>
+            <h5 class="title"> {{ user_profile.name }}</h5>
+
+
+            <p class="description" style="color: black;">
+              {{ user_profile.status }}
+            </p>
+            {% if user_profile.user != user %}
+            <button class="btn btn-danger animation-on-hover" style="width: 100%;font-size: 11px;">
+              <i class="tim-icons icon-email-85"></i> contact
+            </button>
+            <span class="follow{{ user_profile.user.id }}">
+              {% if user_profile.user in user.user_details.followings.all %}
+
+              <button class="btn btn-warning animation-on-hover follow" data-id="{{ user_profile.user.id }}"
+                style="width: 100%;font-size: 11px;">
+                <i class="tim-icons icon-simple-remove"></i> unfollow
+              </button>
+              {% elif request.user in user_profile.user.user_details.follow_requests.all %}
+              <button class="btn btn-info animation-on-hover follow" data-id="{{ user_profile.user.id }}"
+                style="width: 100%;font-size: 11px;">
+                <i class="tim-icons icon-check-2"></i> requested
+              </button>
+              {% else %}
+              <button class="btn btn-success animation-on-hover follow" data-id="{{ user_profile.user.id }}"
+                style="width: 100%;font-size: 11px;">
+                <i class="tim-icons icon-check-2"></i> follow
+              </button>
+              {% endif %}
+            </span>
+            {% endif %}
+            <p style="color: black; font-weight: 600;"><b>Bio</b></p>
+            <h6>
+              {{ user_profile.description }}
+            </h6>
+            <p style="color: black; font-weight: 600;"><b>Location</b></p>
+            <p style="color: black;"><b> {{ user_profile.city }}, {{ user_profile.country }}</b></p>
+          
+            <hr>
+
+            <a class="btn btn-warning animation-on-hover" href="/profile/{{ user_profile.user}}"
+              style="width: 47%;">
+              <i class="tim-icons icon-istanbul" style="font-size:26px;"></i> <br><br>Profile
+            </a>
+            <a class="btn btn-success animation-on-hover" href="/newsfeed/" style="width: 47%;">
+              <i class="tim-icons icon-single-copy-04" style="font-size:26px;"></i> <br><br>Newsfeed
+            </a>
+            <a class="btn btn-info animation-on-hover" href="/followers/{{ user_profile.user}}"
+              style="width: 47%;">
+              <i class="tim-icons icon-single-02" style="font-size:26px;"></i> <br><br>Followers
+            </a>
+            <a class="btn btn-primary animation-on-hover" href="/followings/{{ user_profile.user}}"
+              style="width: 47%;">
+              <i class="tim-icons icon-user-run" style="font-size:26px;"></i> <br><br>Followings
+            </a>
+            <a class="btn btn-success animation-on-hover" href="/posts/{{ request.user }}" style="width: 47%;">
+              <i class="tim-icons icon-paper" style="font-size:26px;"></i> <br><br>Photos
+            </a>
+            <a class="btn btn-info animation-on-hover" href="/videos/{{ user_profile.user}}"
+              style="width: 47%;">
+              <i class="tim-icons icon-triangle-right-17" style="font-size:26px;"></i> <br><br>Videos
+            </a>
+            <a class="btn btn-primary animation-on-hover" href="/pinnedposts"
+              style="width: 47%;">
+              <i class="tim-icons icon-pin" style="font-size:26px;"></i> <br><br>Pinned Posts
+            </a>
+            <a class="btn btn-warning animation-on-hover" href="/sharedposts/{{ user_profile.user}}"
+              style="width: 47%;">
+              <i class="tim-icons icon-spaceship" style="font-size:26px;"></i> <br><br>Shared Posts
+            </a>
+            <br>
+            <br>
+            <br>
+            <br>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="sidebar-mini">
+  <div class="wrapper">
+
+    {% include 'header.html' %}
+    <div class="content">
+      <div class="col-lg-9">
+        {% if page != 'leaderboard' %}
+        <div class="row">
+          <div class="col-lg-4 col-md-6">
+            <div class="card card-stats" style="border-bottom:2px #b6c6ff solid;">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-3">
+                    <div class="">
+                      <img src="{% static 'img/icons/pnghut_rocket-icon-computer-font_3Xp5WNTK22.png' %}"
+                        style="min-width:30px; max-width: 40px;">
+                    </div>
+                  </div>
+                  <div class="col-9">
+                    <div class="numbers">
+                      <p class="card-category">Posts</p>
+                      <h6 class="card-title">{{ user.user_details.post.all.count }}</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-lg-4 col-md-6">
+            <div class="card card-stats" style="border-bottom:2px #b6c6ff solid;">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-3">
+                    <div>
+                      <img src="{% static 'img/icons/82735-200.png' %}" style="min-width:30px; max-width: 40px;">
+                    </div>
+                  </div>
+                  <div class="col-9">
+                    <div class="numbers">
+                      <p class="card-category">Followers</p>
+                      <h6 class="card-title follower_count{{ user_profile.user.id}}">{{ user_profile.follower_count }}
+                      </h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="card card-stats" style="border-bottom:2px #b6c6ff solid;">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-3">
+                    <div>
+                      <img src="{% static 'img/icons/887615_exit_512x512.png' %}"
+                        style="min-width:30px; max-width: 40px;">
+                    </div>
+                  </div>
+                  <div class="col-9">
+                    <div class="numbers">
+                      <p class="card-category">Following</p>
+                      <h6 class="card-title following_count{{ user_profile.user.id}}">{{ user_profile.following_count }}
+                      </h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+       {% if user == user_profile.user or user_profile.privacy == False or user in user_profile.followers.all  %}
+        {% if page == 'newsfeed' %}
+        {% include 'newsfeed.html' %}
+        {% elif page == 'profile' %}
+        {% include 'profile.html' %}
+        {% elif page == 'single_post' %}
+        {% include 'post.html' %}
+        {% elif page == 'people' %}
+        {% include 'people.html' %}
+        {% elif page == 'posts' %}
+        {% include 'posts.html' %}
+        {% elif page == 'edit-profile' %}
+        {% include 'edit-profile.html' %}
+        {% elif page == 'messenger' %}
+        {% include 'messanger.html' %}
+        {% elif page == 'change_pass' %}
+        {% include 'change_pass.html' %}
+        {% elif page == 'privacy' %}
+        {% include 'privacy.html' %}
+        {% elif page == 'follow_requests' %}
+        {% include 'follow_requests.html' %}
+        {% elif page == 'notepad' %}
+        {% include 'notepade.html' %}
+        {% elif page == 'calendar' %}
+        {% include 'calender.html' %}
+        {% endif %}
+      {% else %}
+        private Account
+      {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+  var loadFile = function (event) {
+    var remove_btn = document.getElementById('remove_image');
+    var image = document.getElementById('output');
+    remove_btn.style.display = 'block';
+    image.src = URL.createObjectURL(event.target.files[0]);
+    image.style.display = "block";
+  };
+</script>
+<!--Modals-->
+<div class="modal fade post-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Create Post</h3>
+      </div>
+      <div class="modal-body">
+        <form action="/post/" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          
+          <input class="form-control" name="caption" placeholder="Caption!!">
+          <br>
+          <textarea class="emojionearea2" name="desc" placeholder="Description!!"></textarea>
+
+          <input type="file" accept="image/*" name="myfile" id="file" onchange="loadFile(event)" style="display: none;">
+          <p class="btn btn-warning animation-on-hover" style="color: white;"><label for="file"
+              style="cursor: pointer;">Upload Image</label></p>
+          <img id="output" width="100%" />
+          
+          <button style="display: none;" type="button" class="btn btn-danger animation-on-hover" id="remove_image">remove
+            image</button>
+          <button class="btn btn-success animation-on-hover" type="submit" style="width: 100%;">POST<i
+            class="tim-icons icon-spaceship"></i></button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Share Post</h3>
+      </div>
+      <div class="modal-body">
+        <form action="/sharepost/" class="form-group" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input class="form-control" name="caption" placeholder="Caption!!">
+          <textarea class="emojionearea2" name="desc" placeholder="Description!!"></textarea>
+
+          <input type="hidden" name="post_id" id="post_id" value="">
+          <button class="btn btn-success animation-on-hover" type="submit" style="width: 100%;">SHARE POST<i
+              class="tim-icons icon-spaceship"></i></button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade profile-image-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-body">
+        <img id="profile_image" width="100%">
+        <div class="row">
+          <div class="card-user col-12">
+
+            <form id="form" action="/change_image/" method="POST" enctype="multipart/form-data">
+              <input type="hidden" name="id" id="id">
+
+              {% csrf_token %}
+              {% if user_profile.user == user %}
+              <input type="file" accept="image/*" name="myfile" id="change_image" onchange="loadFile(event)"
+                style="display: none;">
+              <label class="btn btn-warning animation-on-hover" style="width:100%;" for="change_image"
+                style="cursor: pointer;">Upload Image</label>
+              {% endif %}
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="modal fade image-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <img id="image" width="100%">
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- Ajax -->
+
+<script>
+  $(document).ready(function () {
+    $('body').on('click', '.follow', function (event) {
+      var user_id = this.getAttribute('data-id');
+      $.ajax({
+        url: '/follow/' + user_id,
+        data: {
+          'user_id': user_id,
+        },
+        dataType: 'json',
+        success: function (data) {
+          $('.follow' + user_id).load('/follow_btn/' + user_id);
+          $('.following_count{{ user.id }}').html(data['following_count']);
+          $('.follower_count' + user_id).html(data['follower_count']);
+        }
+
+      });
+
+    });
+    $('body').on('click', '.accept', function (event) {
+      var user_id = this.getAttribute('data-id');
+      $.ajax({
+        url: '/follow_request/' + user_id,
+        data: {
+          'user_id': user_id,
+        },
+        dataType: 'json',
+        success: function (data) {
+          $('.request' + user_id).load('/follow_req_btn/' + user_id);
+          //$('.following_count{{ user.id }}').html(data['following_count']);
+          //$('.follower_count' + user_id).html(data['follower_count']);
+        }
+
+      });
+
+    });
+    $('body').on('click', '.load_comments', function (event) {
+      var post_id = this.getAttribute('data-post-id');
+      var type = this.getAttribute('data-type');
+      var count = parseInt(this.getAttribute('data-count'));
+      var count2 = parseInt(this.getAttribute('data-count2'));
+      if (type == 'comments') {
+        count = count + 2;
+      }
+      else if (type == 'replies') {
+        count2 = count2 + 2;
+      }
+      $.ajax({
+        success: function (data) {
+          $('.comment-box' + post_id).load("/load_more/" + post_id + "/" + count + "/" + count2)
+        }
+      });
+    });
+
+    $('body').on('click', '.pin', function (event) {
+      var post_id = this.getAttribute('data-id');
+      $.ajax({
+        url: '/pin-post',
+        data: {
+          'post_id': post_id,
+        },
+        dataType: 'json',
+        success: function (data) {
+          $('.pin' + post_id).html(data['text'])
+        }
+      });
+    });
+    $('body').on('click', '.comment-like', function (event) {
+      $(this).toggleClass('is-active');
+      var like_on = this.getAttribute('data-like-on');
+      var post_id = this.getAttribute('data-post-id');
+      var comment_id = this.getAttribute('data-id');
+      var reply_id = this.getAttribute('data-reply-id');
+      $.ajax({
+        url: '/comment_like',
+        data: {
+          'like_on': like_on,
+          'post_id': post_id,
+          'comment_id': comment_id,
+          'reply_id': reply_id,
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (like_on == 'comment') {
+            $('#comment_like_count' + comment_id).html(data['like_count'])
+          } else {
+            $('#reply_like_count' + reply_id).html(data['like_count'])
+          }
+        }
+      });
+    });
+    $('body').on('click', '.delete', function (event) {
+      var delete_t = this.getAttribute('data-delete-t');
+      var post_id = this.getAttribute('data-post-id');
+      var id = this.getAttribute('data-id');
+      console.log(delete_t);
+      $.ajax({
+        url: '/delete',
+        data: {
+          'delete_t': delete_t,
+          'post_id': post_id,
+          'id': id,
+        },
+        dataType: 'json',
+        success: function (data) {
+          if(delete_t == 'post'){
+            console.log('test');
+            $('.post'+ post_id).html('');
+          }
+          $('.comment_count' + post_id).html(data['count']);
+          if (delete_t == 'comment') {
+            $('.comment' + id).html('')
+          } else {
+            $('.reply' + id).html('')
+          }
+
+        }
+      });
+    });
+    '{% if user_profile.user == user %}'
+    document.getElementById("change_image").onchange = function () {
+      document.getElementById("form").submit();
+    };
+    '{%endif%}'
+    $('body').on('click', '.reply', function (event) {
+      var comment_id = this.getAttribute('data-comment-id');
+      var x = document.getElementById("reply_input" + comment_id);
+      x.style.display = "block";
+    })
+    $('body').on('click', '.image', function (event) {
+      var image_src = this.getAttribute('data-img-src');
+      var image = document.getElementById("image");
+      image.src = image_src;
+    })
+    $('body').on('click', '.view-image', function (event) {
+      var image_src = this.getAttribute('data-src');
+      var id = this.getAttribute('data-id');
+      var image = document.getElementById("profile_image");
+      var input_id = document.getElementById("id");
+      image.src = image_src;
+      input_id.value = id;
+    })
+  });
+</script>
+<script src="{% static 'js/websocket.js' %}"> </script>
+<script>
+  const likeSocket = new WebSocket(
+    'ws://'
+    + window.location.host
+    + '/ws/chat/'
+    + 'like'
+    + '/'
+  );
+
+  likeSocket.onmessage = function (e) {
+    const data = JSON.parse(e.data);
+    var post_id = data.post_id;
+    $('#like_count' + post_id).html(data.like_no);
+    $('.likers' + post_id).load('/likers/' + post_id)
+    $('.liker-avatars' + post_id).load('/liker-avatars/' + post_id)
+    if (data.notify == true) {
+      if (data.post_username == '{{request.user}}') {
+        $('.noti').addClass('notification');
+        $('.notification_list_body').load(window.location.href + ' .notification_list');
+      }
+    }
+    if (data.post_username == '{{request.user}}') {
+      $('.notification_list_body').load(window.location.href + ' .notification_list');
+    }
+  };
+
+  likeSocket.onclose = function (e) {
+    console.error('Chat socket closed unexpectedly');
+  };
+
+  $('body').on('click', '.like_btn', function (event) {
+    $(this).toggleClass('is-active');
+    var post_id = this.getAttribute('data-post-id');
+    likeSocket.send(JSON.stringify({
+      'post_id': post_id,
+      'command': 'post_like'
+    }));
+  });
+  const commentSocket = new WebSocket(
+    'ws://'
+    + window.location.host
+    + '/ws/chat/'
+    + 'comment'
+    + '/'
+
+  );
+
+  commentSocket.onmessage = function (e) {
+    const data = JSON.parse(e.data);
+    var post_id = data.post_id;
+    var comment = data.comment_text;
+    var comment_id = data.comment_id;
+    $('.comment_count' + post_id).html(data.comment_no);
+    $('.comment-box' + post_id).append(function () {
+      "<p>test</p>"
+    });
+    if (data.username == '{{ request.user.username }}') {
+      var del = '<a class="delete dropdown-item" data-delete-t="comment"  data-id="' + comment_id + '" data-post-id="' + post_id + '" href="javascript:void(0)">Delete</a>';
+    } else {
+      var del = '';
+    }
+    $('.comment-box' + post_id).append(
+      '<span class="comment' + comment_id + '">' +
+      '<div class="row">' +
+      '<div class="card-user col-12">' +
+      '<a style="color: black;" href="/profile/' + data.username + '">' +
+      '<span><img class="avatar" src="/static/' + data.user_profile_image + '" style="height: 50px; width: 50px;"' +
+      'alt="Card image"></span>' +
+      '<span>' + data.user_name + '</span></a>' +
+      '<span style="font-size: 11px;"> ' + comment + '</span>' +
+      ' </div>' +
+
+      ' </div>' +
+      '<div class="row">' +
+      '<div class="col-2"></div>' +
+      '<div style="padding-right: 5px;">' +
+      '<a href="javascript:void(0);" class="reply" data-comment-id="' + comment_id + '" style="color: black;">' +
+      'reply ' +
+      '</a>' +
+      '</div>' +
+      '<div class="" style="padding-right: 5px;">' +
+      '<a href="javascript:void(0);" class="comment-like like-button" data-id="' + comment_id + '" data-reply-id="null" data-post-id="' + post_id + '"  data-like-on ="comment" style="width: 18px;height: 18px; color:black">' +
+      '<i class="tim-icons icon-heart-2  not-liked bouncy" style="font-size: 10px;"></i>' +
+      '<i class="tim-icons icon-heart-2 is-liked bouncy" style="font-size: 10px;"></i>' +
+      '<span class="like-overlay"></span>' +
+      '</a>' +
+      '</div>' +
+      '<div style="padding-right: 5px;">' +
+      '<p id="comment_like_count' + comment_id + '">' +
+      0 +
+      '</p>' +
+      '</div>' +
+      '<div style="padding-right: 5px;">' +
+      '<div class="dropdown">' +
+      '<button type="button" class="btn btn-default dropdown-toggle btn-link btn-icon"' +
+      'data-toggle="dropdown" aria-expanded="false">' +
+      '<i class="tim-icons icon-settings-gear-63"></i>' +
+      ' </button>' +
+      '<div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end"' +
+      'style="position: absolute; transform: translate3d(-133px, 22px, 0px); top: 0px; left: 0px; will-change: transform;">' +
+      '<a class="dropdown-item" href="#">Report</a>' +
+      del +
+      '</div>' +
+      ' </div>' +
+      '</div>' +
+      '<div class="" style="padding-right: 5px;  right: 10px;">' +
+      '<p style="font-size: 12px;">' +
+      '<i class="tim-icons icon-watch-time"></i> 1 hour Ago' +
+      '</p>' +
+      '</div>' +
+      '<div class="reply-box' + comment_id + '" style="margin-left: 15px;">' +
+
+      '</div>' +
+      '</div>' +
+      '<div id="reply_input' + comment_id + '" style="display: none;">' +
+      '<div class="row">' +
+      '<div class="col-10">' +
+      '<div class="form-group">' +
+      '<input type="text" style="border-radius: 0; " class="form-control " id="reply-input' + comment_id + '"' +
+      'placeholder="comment...">' +
+      '</div>' +
+      '</div>' +
+      '<div class="">' +
+      '<button  class="reply-button btn-danger animation-on-hover" style="padding:7px;" data-post-id="' + post_id + '" data-comment-id="' + comment_id + '">' +
+      '<i class="tim-icons icon-send"></i>' +
+      '</button>' +
+      "</div>" +
+      "</div>" +
+      "</div>" +
+      "</span>"
+    );
+    if (data.notify == true) {
+      if (data.post_username == '{{request.user}}') {
+        $('.noti').addClass('notification');
+        $('.notification_list_body').load(window.location.href + ' .notification_list');
+      }
+    }
+  };
+
+  commentSocket.onclose = function (e) {
+    console.error('Chat socket closed unexpectedly');
+  };
+  // document.querySelector('#chat-message-input').focus();
+  //document.querySelector('#chat-message-input').onkeyup = function(e) {
+  //    if (e.keyCode === 13) {  // enter, return
+  //         document.querySelector('#chat-message-submit').click();
+  //     }
+  // };
+
+  $('body').on('click', '.comment-button', function (event) {
+    var post_id = this.getAttribute('data-post-id');
+    const commentInputDom = document.querySelector('#comment-input' + post_id);
+    const comment = commentInputDom.value;
+    commentSocket.send(JSON.stringify({
+      'post_id': post_id,
+      'comment': comment,
+      'command': 'post_comment'
+    }));
+    commentInputDom.value = '';
+    $('.comment-section' + post_id).animate({ scrollTop: $('.comment-section' + post_id).prop("scrollHeight") }, 1000);
+  });
+  const replySocket = new WebSocket(
+    'ws://'
+    + window.location.host
+    + '/ws/chat/'
+    + 'reply'
+    + '/'
+
+  );
+
+  replySocket.onmessage = function (e) {
+    const data = JSON.parse(e.data);
+    var post_id = data.post_id;
+    $('.comment_count' + post_id).html(data.comment_no);
+    if (data.username == '{{ request.user.username }}') {
+      var del = '<a class="delete dropdown-item" data-delete-t="reply"  data-id="' + data.reply_id + '" data-post-id="' + post_id + '" href="javascript:void(0)">Delete</a>';
+    } else {
+      var del = '';
+    }
+    $('.reply-box' + data.comment_id).append(
+      '<span class="reply' + data.reply_id + '">' +
+      '<div class="card-user col-12">' +
+      '<a style="color: black;" href="/profile/' + data.username + '">' +
+      '<span><img class="avatar" src="/static/' + data.user_profile_image + '" style="height: 40px; width: 40px;"' +
+      'alt="Card image"></span>' +
+      '<span style="font-size: 13px; color: black">' + data.user_name + '</span></a>' +
+      '<span style="font-size: 11px; color: black;"> ' + data.reply_text + '</span>' +
+      '</div>' +
+
+      '<div class="row" style="margin-left:30px ;">' +
+      '<div style="padding-right: 5px;">' +
+      '<a href="javascript:void(0);" style="color: black;">' +
+      'reply' +
+      '</a>' +
+      '</div>' +
+      '<div class="" style="padding-right: 5px;">' +
+      '<a href="javascript:void(0);" class="comment-like like-button" data-reply-id="' + data.reply_id + '" data-post-id="' + data.post_id + '" data-id="' + data.comment_id + '" data-like-on ="reply"' +
+      ' style="width: 18px;height: 18px; color:black">' +
+      '<i class="tim-icons icon-heart-2 material-icons not-liked bouncy" style="font-size: 10px;"></i>' +
+      '<i class="tim-icons icon-heart-2 material-icons is-liked bouncy" style="font-size: 10px;"></i>' +
+      '<span class="like-overlay"></span>' +
+      '</a>' +
+      '</div>' +
+      '<div style="padding-right: 5px;">' +
+      '<p id="reply_like_count' + data.reply_id + '">' +
+      '0' +
+      '</p>' +
+      '</div>' +
+      '<div style="padding-right: 5px;">' +
+      '<div class="dropdown">' +
+      '<button type="button" class="btn btn-default dropdown-toggle btn-link btn-icon"' +
+      'data-toggle="dropdown" aria-expanded="false">' +
+      '<i class="tim-icons icon-settings-gear-63"></i>' +
+      '</button>' +
+      '<div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end"' +
+      'style="position: absolute; transform: translate3d(-133px, 22px, 0px); top: 0px; left: 0px; will-change: transform;">' +
+      '<a class="dropdown-item" href="#">Action</a>' +
+      del +
+      '</div>' +
+      '</div>' +
+      '</div>' +
+      '<div>' +
+      '<p style="font-size: 12px;">' +
+      '<i class="tim-icons icon-watch-time"></i> 1 hour Ago' +
+      ' </p>' +
+      '</div>' +
+      '</div>' +
+      '</span>'
+    )
+    if (data.notify1 == true) {
+      if (data.post_username == '{{request.user}}') {
+        $('.noti').addClass('notification');
+        $('.notification_list_body').load(window.location.href + ' .notification_list');
+      }
+    }
+    if (data.notify2 == true) {
+      if (data.comment_username == '{{request.user}}') {
+        $('.noti').addClass('notification');
+        $('.notification_list_body').load(window.location.href + ' .notification_list');
+      }
+    }
+  };
+
+  replySocket.onclose = function (e) {
+    console.error('Chat socket closed unexpectedly');
+  };
+  // document.querySelector('#chat-message-input').focus();
+  //document.querySelector('#chat-message-input').onkeyup = function(e) {
+  //    if (e.keyCode === 13) {  // enter, return
+  //         document.querySelector('#chat-message-submit').click();
+  //     }
+  // };
+
+  $('body').on('click', '.reply-button', function (event) {
+    var post_id = this.getAttribute('data-post-id');
+    var comment_id = this.getAttribute('data-comment-id');
+    const commentInputDom = document.querySelector('#reply-input' + comment_id);
+    const comment = commentInputDom.value;
+    replySocket.send(JSON.stringify({
+      'post_id': post_id,
+      'comment_id': comment_id,
+      'comment': comment,
+      'command': 'post_reply'
+    }));
+    commentInputDom.value = '';
+  });
+</script>

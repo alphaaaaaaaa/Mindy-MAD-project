@@ -1,0 +1,179 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="76x76" href="{% static 'img/apple-icon.png' %}">
+  <title>
+   Mindly
+  </title>
+  
+  <link href="{% static 'dist/css/swipe.min.css' %}" type="text/css" rel="stylesheet">
+  <!--     Fonts and icons     -->
+  <link href="{% static 'dist/css/lib/modal.css' %}" type="text/css" rel="stylesheet">
+		<!-- Favicon -->
+		<link href="{% static 'dist/img/favicon.png' %}" type="image/png" rel="icon">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet" />
+  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <!-- Nucleo Icons -->
+  <link href="{% static 'css/nucleo-icons.css' %}" rel="stylesheet" />
+  <!-- CSS Files -->
+  <link href="{% static 'css/black-dashboard.css' %}" rel="stylesheet" />
+  <link href="{% static 'css/search_result.css' %}" rel="stylesheet" />
+  <link href="{% static 'css/emojionearea.min.css' %}" rel="stylesheet" />
+  <link href="{% static 'style.css' %}" rel="stylesheet" />
+  <link href="{% static 'dist/css/lib/modal.css' %}" type="text/css" rel="stylesheet">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script></script>
+  <script>
+    function myFunction() {
+      var x = document.getElementById("right_sidebar");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+
+    }
+    function myFunction2() {
+      var x = document.getElementById("sidebar");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+
+      }
+      $("body").toggleClass('rtl menu-on-right');
+    }
+    $(document).ready(function() {
+	    $(".emojionearea2").emojioneArea({
+  	pickerPosition: "right",
+    tonesStyle: "bullet",
+    
+  });
+  $(".emojionearea1").emojioneArea({
+  	pickerPosition: "top",
+    tonesStyle: "bullet",
+    events: {
+        
+        keydown: function (editor, event) {
+        console.log(this.getText());
+        $("#key_down").trigger('click');
+        
+    }
+}
+  });
+    });
+  </script>
+</head>
+
+<body class="white-content" id="body">
+  {% block 'content' %}
+  {% endblock %}
+  <script src="{% static 'js/core/jquery.min.js' %}"></script>
+  <script src="{% static 'js/emojionearea.min.js' %}"></script>
+  <script src="{% static 'js/core/popper.min.js' %}"></script>
+  <script src="{% static 'js/core/bootstrap.min.js' %}"></script>  <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'js/infinite.min.js' %}"></script>
+  <script src="{% static 'js/search_result.js' %}"></script>
+  <!--  Google Maps Plugin    -->
+  <!-- Place this tag in your head or just before your close body tag. -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+  <!-- Chart JS -->
+  <script src="{% static 'js/plugins/chartjs.min.js' %}"></script>
+  <!--  Notifications Plugin    -->
+  <script src="{% static  'js/plugins/bootstrap-notify.js' %}"></script>
+  <!-- Control Center for Black Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="{% static 'js/black-dashboard.min.js' %}"></script>
+  <!-- Black Dashboard DEMO methods, don't include it in your project! -->
+  <link href="{% static 'css/style1.css' %}" rel="stylesheet" />
+  <script>
+  
+    $(document).ready(function () {
+      $('body').on('click', '.sharepost', function (event)  {
+        var  post_id = this.getAttribute('data-id');
+        var file = document.getElementById('post_id');
+        file.value = post_id; 
+      })
+      $('body').on('click', '#privacy', function (event)  {
+        var  privacy = document.getElementById('privacy');
+        var check = 'false'
+        if(privacy.value=='on'){
+          privacy.value = 'off';
+          check == 'true'
+        }else if(check=='false'){
+          privacy.value = 'on';
+        }
+      })
+      $('.bell').click(function () {
+        $.ajax({
+        url: '/notification_bell',
+        dataType: 'json',
+        success: function (data) {
+          $('.noti').removeClass('notification');
+        }
+      });
+      })
+     
+      $('#remove_image').click(function () {
+        var image = document.getElementById('output');
+        var file = document.getElementById('file');
+        var remove_btn = document.getElementById('remove_image');
+        image.src = null;
+        image.style.display = "none";
+        remove_btn.style.display = "none";
+        file.value = null;
+      })
+      
+    })
+ 
+  </script>
+
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/emojione/4.5.0/lib/js/emojione.min.js"></script>
+  <script>
+    window.TrackJS &&
+      TrackJS.install({
+        token: "ee6fab19c5a04ac1a32a645abde4613a",
+        application: "black-dashboard-free"
+      });
+  </script>
+  <script>
+    var username = '{{ request.user.username }}'
+    const chat_list_Socket = new WebSocket(
+    'ws://'
+    + window.location.host
+    + '/ws/messanger/'
+    + 'chat_list'
+    + '/'
+
+  );
+
+  chat_list_Socket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        if (data['to']=='{{ request.user }}'){
+            $('.discussions').load(window.location.href + ' #chats')
+            $('.num').load(window.location.href + ' #num')
+            if(data['seen']=='unread'){
+              new Audio("{% static '15726_download_iphone_sms_original_ringtone_iphone_sms_ringtones.mp3' %}").play()
+            
+            }
+        }
+
+  };
+  $('body').on('click', '#chat-message-submit', function (event) {
+    const messageInputDom = document.querySelector('#chat-message-input');
+    const message = messageInputDom.value;
+    chat_list_Socket.send(JSON.stringify({
+      'message': message,
+      'command': 'send_chat_notification',
+      'to':'{{ user_profile.user.username }}'
+    }));
+  });
+</script>
+</body>
+
+</html>

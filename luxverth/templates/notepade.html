@@ -1,0 +1,182 @@
+
+<style>
+    * {
+  outline:none;
+	border:none;
+	margin:0px;
+	padding:0px;
+}
+body {
+	text-align: center;
+	background:#333 url(https://static.tumblr.com/maopbtg/a5emgtoju/inflicted.png) repeat;        
+}
+#paper {
+	color:#FFF;
+	font-size:20px;
+}
+#margin {
+	margin-left:12px;
+	margin-bottom:20px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none; 
+}
+#text {
+	width:500px;
+	overflow:hidden;
+	background-color:#FFF;
+	color:#222;
+	font-family:Courier, monospace;
+	font-weight:normal;
+	font-size:24px;
+	resize:none;
+	line-height:40px;
+	padding-left:100px;
+	padding-right:100px;
+	padding-top:45px;
+	padding-bottom:34px;
+	background-image:url(https://static.tumblr.com/maopbtg/E9Bmgtoht/lines.png), url(https://static.tumblr.com/maopbtg/nBUmgtogx/paper.png);
+	background-repeat:repeat-y, repeat;
+	-webkit-border-radius:12px;
+	border-radius:12px;
+	-webkit-box-shadow: 0px 2px 14px #000;
+	box-shadow: 0px 2px 14px #000;
+	border-top:1px solid #FFF;
+	border-bottom:1px solid #FFF;
+}
+#title {
+	background-color:transparent;
+	border-bottom:3px solid black;
+	color:#FFF;
+	font-size:20px;
+	font-family:Courier, monospace;
+	height:28px;
+	font-weight:bold;
+	width:220px;
+}
+#button {
+	cursor:pointer;
+	margin-top:20px;
+	float:right;
+	height:40px;
+	padding-left:24px;
+	padding-right:24px;
+	font-family:Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size:20px;
+	color:#FFF;
+	text-shadow: 0px -1px 0px #000000;
+	-webkit-border-radius:8px;
+	border-radius:8px;
+	border-top:1px solid #FFF;
+	-webkit-box-shadow: 0px 2px 14px #000;
+	box-shadow: 0px 2px 14px #000;
+	background-color: #62add6;
+	background-image:url(https://static.tumblr.com/maopbtg/ZHLmgtok7/button.png);
+	background-repeat:repeat-x;
+}
+#button:active {
+	zoom: 1;
+	filter: alpha(opacity=80);
+	opacity: 0.8;
+}
+#button:focus {
+	zoom: 1;
+	filter: alpha(opacity=80);
+	opacity: 0.8;
+}
+#wrapper {
+	width:700px;
+	height:auto;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:24px;
+	margin-bottom:100px;
+}
+</style>
+<script>
+    $(document).ready(function(){
+  $('#title').focus();
+    $('#text').autosize();
+});
+</script>
+
+{% load static %}
+<a href="javascript:void(0)" class="btn btn-primary" data-id="2" data-src="{% static user_profile.fav_image2 %}"
+              data-toggle="modal" data-target=".notepad-modal-sm">create note</a>
+<br>
+<br>
+<h3>My Notes</h3>
+<div class="row justify-content-center">
+{% for note in notes %}
+<div class="col-lg-4 col-md-4 col-6">
+	<div class="card">
+
+		<div class="card-body text-center">
+			
+				<a href="#" data-toggle="modal" data-target=".notepad-modal-sm{{ note.id }}"style="text-align: center; font-size: 18px;"><b>{{ note.title }}</b></a>
+			<a href="javascript:void(0)" data-toggle="modal" data-target=".notepad-modal-sm{{ note.id }}">
+				<p style="text-align: center; font-size: 13px;">{{  note.content|slice:":85" }}...
+			</a>
+			<br>
+			<span style="font-size: 11px;margin-left: 20px;"><i class="tim-icons icon-watch-time"></i>
+				{{  note.date }}</span>
+			</p>
+			<a href="javascript:void(0)" class="btn btn-primary" data-id="2" data-src="{% static user_profile.fav_image2 %}"
+			data-toggle="modal" data-target=".notepad-modal-sm{{ note.id }}">view note</a>
+			
+		</div>
+	</div>
+</div>
+    
+    <div class="modal fade notepad-modal-sm{{ note.id }}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+  
+    <div class="modal-dialog modal-md">
+      <div class="modal-content" style="height: 0px;">
+       
+          <div id="wrapper">
+  
+              <form id="paper" method="POST" action="/notepad">
+                  {% csrf_token %}
+                  <input name="id" type="hidden" value="{{ note.id }}">
+                  <div id="margin" style="color: black;">Title: <input id="title" style="color: black;" type="text" name="title" value="{{ note.title }}"></div>
+                  <textarea placeholder="Enter something funny." id="text" name="content" rows="9" style="word-wrap: break-word; ">{{ note.content }}</textarea>  
+                  <br>
+                  <input id="button" type="submit" name="edit" value="Save">
+                  
+              </form>
+          
+          </div>
+  
+      </div>
+    </div>
+  </div>
+{% endfor %}
+</div>
+  <div class="modal fade notepad-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+
+  <div class="modal-dialog modal-md">
+    <div class="modal-content" style="height: 0px;">
+     
+        <div id="wrapper">
+
+            <form id="paper" method="POST" action="/notepad">
+                {% csrf_token %}
+                
+                <div id="margin" style="color: black;">Title: <input id="title" style="color: black;" type="text" name="title"></div>
+                <textarea placeholder="Enter something funny." id="text" name="content" rows="9" style="word-wrap: break-word; "></textarea>  
+                <br>
+                <input id="button" type="submit" name="create" value="Create">
+                
+            </form>
+        
+        </div>
+
+    </div>
+  </div>
+</div>
+

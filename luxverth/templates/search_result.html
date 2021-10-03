@@ -1,0 +1,19 @@
+{% load static %}
+
+{% if artists %}
+<div class="modal-body" style="margin-top:-30px">
+    <ul>
+        {% for artist in artists %}
+        <div class="row">
+            <div class="col-12">
+                <span><a href="{% url 'profile' artist.user.username %}"><img class="avatar" src="{% static artist.profile_image %}" style="height: 50px; width: 50px;"
+                    alt="Card image"></a></span>
+                <span style="font-size: 13px;"><a href="{% url 'profile' artist.user.username %}">{{ artist.name }}</a></span>
+                
+                
+            </div>
+        </div>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}

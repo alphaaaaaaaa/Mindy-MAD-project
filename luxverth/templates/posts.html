@@ -1,0 +1,409 @@
+{% load static %}
+
+{% if header == 'posts' %}
+<h3 class="title" style="text-align: center;">POSTS AND TEXT</h3>
+{% elif header == 'videos' %}
+<h3 class="title" style="text-align: center;">VIDEOS</h3>
+{% elif header == 'sharedposts' %}
+<h3 class="title" style="text-align: center;">SHARED POSTS</h3>
+{% endif %}
+<div class="row">
+    {%  for post in posts %}
+    <div class="col-lg-4 col-md-4 col-12">
+        <div class="card">
+
+            {% if post.post_type == 'photo' %}
+            <a href="javascript:void(0)" data-toggle="modal" data-target=".post-modal{{ post.id }}">
+                <img class="card-img" src="{% static post.image %}" style="border-radius: 0;  " alt="Card image"></a>
+            {% elif post.post_type == 'video' %}
+            <div class="">
+                <a href="javascript:void(0)" data-toggle="modal" data-target=".post-modal{{ post.id }}">
+                    <video class="card-img" style="position: relative;">
+                        <source src="{% static post.image %}" type="video/mp4">
+                        Your browser does not support HTML5 video.
+
+                    </video>
+                    <div class="centered" >
+                        <i class="tim-icons icon-triangle-right-17" style="font-size: 30px;"></i>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <span style="font-size: 11px;margin-left: 20px;"><i class="tim-icons icon-watch-time"></i>
+                    {{  post.created_on }}</span>
+                <a href="javascript:void(0)" data-toggle="modal" data-target=".post-modal{{ post.id }}">
+                    <p style="text-align: center; font-size: 13px;">{{  post.caption|slice:":85" }}...
+                </a>
+                </p>
+                <div class="row" style="margin-left:0px;margin-top: 5px;">
+                    <div class="" style="padding-right: 5px;">
+                        <a href="javascript:void(0);"
+                            class="like_btn like-button {% if user in post.liker_users.all %}is-active{% endif %}"
+                            data-post-id="{{ post.id }}">
+                            <i class="tim-icons icon-heart-2  not-liked bouncy" style="font-size: 20px;"></i>
+                            <i class="tim-icons icon-heart-2 is-liked bouncy" style="font-size: 20px;"></i>
+                            <span class="like-overlay"></span>
+                        </a>
+                    </div>
+                    <div class="" style=" margin-top:15px;">
+                        <span class="rounded" id="like_count{{ post.id }}"
+                            style="background-color: rgb(22, 22, 22); padding:2px; color: blanchedalmond; padding:2px;">{{post.like_count}}</span>
+                    </div>
+                    <div style=" margin-top:12px;">
+                        <ul class="friends-harmonic liker-avatars{{ post.id }}" style="margin-left: 13px;"
+                            data-toggle="modal" data-target=".likers-modal-sm{{ post.id }}">
+                            {% for liker in post.liker_users.all%}
+                            <li class="">
+                                <a href="javascript:void(0)" style="border-color:rgb(18, 18, 37) ;">
+                                    <img style="margin-bottom: 3px;" src="{% static liker.user_details.profile_image %}"
+                                        style="" alt="friend">
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="modal fade likers-modal-sm{{ post.id }}" tabindex="-1" role="dialog"
+                        aria-labelledby="mySmallModalLabel" aria-hidden="true">
+
+                        <div class="modal-dialog modal-sm likers-modal{{ post.id }}">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="modal-title">Likers</h3>
+                                </div>
+                                <div class="modal-body likers{{ post.id }}">
+                                    {% for liker in post.liker_users.all%}
+                                    <div class="row ">
+                                        <div class="card-user col-12">
+                                            <a style="color: black;" href="/profile/{{ liker }}">
+                                                <span><img class="avatar"
+                                                        src="{% static liker.user_details.profile_image %}"
+                                                        style="height: 50px; width: 50px;" alt="Card image"></span>
+                                                <span>{{ liker.user_details.name }}</span></a>
+                                            <span style="font-size: 11px; float: right;">{% if liker != user %}
+
+                                                <span class="follow{{liker.id }}">
+                                                    {% if liker in user.user_details.followings.all %}
+                                                    <button class="btn btn-warning animation-on-hover follow"
+                                                        data-id="{{liker.id }}" style="width: 100%;font-size: 11px;">
+                                                        <i class="tim-icons icon-simple-remove"></i> unfollow
+                                                    </button>
+                                                    {% else %}
+                                                    <button class="btn btn-success animation-on-hover follow"
+                                                        data-id="{{liker.id }}" style="width: 100%;font-size: 11px;" s>
+                                                        <i class="tim-icons icon-check-2"></i> follow
+                                                    </button>
+                                                    {% endif %}
+                                                </span>
+                                                {% endif %}</span>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="" style="margin-left:10px; margin-top:15px; float:right">
+                        <span class="rounded"
+                            style="background-color: rgb(27, 27, 27); padding:2px;color: blanchedalmond;"><i
+                                class="tim-icons icon-paper"></i></span>
+                        <span class="rounded comment_count{{ post.id }}"
+                            style="background-color: rgb(22, 22, 22); padding:2px; color: blanchedalmond;">{{ post.comment_count }}</span>
+                        <span class="rounded"
+                            style="background-color: rgb(27, 27, 27); padding:2px;color: blanchedalmond;"><a href=""
+                                class="sharepost" data-id="{{ post.id }}" data-toggle="modal"
+                                data-target=".bd-example-modal-sm"><i class="tim-icons icon-spaceship"></i></a></span>
+                        <span class="rounded"
+                            style="background-color: rgb(34, 34, 34); padding:2px; color: blanchedalmond;">10</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--post modal-->
+    <div class="modal fade post-modal{{ post.id }}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="row">
+                    {% if post.post_type == 'photo' %}
+                    <div class="col-lg-7 col-md-12">
+
+                        <img class="card-img post-image" src="{% static post.image %}" style="border-radius: 0;  "
+                            alt="Card image">
+
+                    </div>
+                    {% elif post.post_type == 'video' %}
+                    <div class="col-lg-7 col-md-12">
+                        <video class="card-img" style="height:400px;" controls>
+                            <source src="{% static post.image %}" type="video/mp4">
+
+                            Your browser does not support HTML5 video.
+                        </video>
+                    </div>
+                    {% else %}
+                    <div class="col-3">
+
+                    </div>
+                    {% endif %}
+                    <div class="{% if post.post_type != 'text' %}col-lg-5 col-md-12{% else %}col-lg-6 col-md-6{% endif %} rounded"
+                        style="background-color: white; max-height:400px; {% if post.post_type == 'text' %} max-height:450px; {%endif%}">
+                        <div id="style-4" class="scrollbar" style="height: 300px;">
+                            {% if post.SharedPost %}
+                            <div class="card-user author" style="margin-top: 10px;text-align: center;">
+                                <span class="row">
+                                    <div class="col-7" style="text-align:left;">
+                                        <a style="color: black;" href="/profile/{{ post.sharedpost_user }}">
+                                            <span><img class="avatar"
+                                                    src="{% static post.sharedpost_user.user_details.profile_image %}"
+                                                    style="height: 50px; width: 50px;" alt="Card image"></span>
+                                            <span>{{  post.sharedpost_user.user_details.name }}</span></a>
+                                    </div>
+                                    <div class="col-5" style="float: right;">
+                                        <span style="font-size: 9px;">{{  post.created_on }}</span>
+                                    </div>
+                                </span>
+                                <p>{{  post.sharedpost_caption }}
+                                </p>
+                                <hr>
+                            </div>
+                            {% endif %}
+                            <div class="card-user author" style="margin-top: 10px; text-align: center;">
+                                <span class="row">
+                                    <div class="col-7" style="text-align:left;">
+                                        <a style="color: black;" href="/profile/{{ post.user }}">
+                                            <span><img class="avatar"
+                                                    src="{% static post.user.user_details.profile_image %}"
+                                                    style="height: 50px; width: 50px;" alt="Card image"></span>
+                                            <span style="font-size: 13px;">{{  post.user.user_details.name }}</span></a>
+                                    </div>
+                                    <div class="col-5" style="float: right;">
+                                        <span style="font-size: 9px;">{{  post.created_on }}</span>
+                                    </div>
+                                </span>
+                                <p style="font-size: 11px;">{{  post.caption }}
+                                </p>
+                                <hr>
+                            </div>
+                            <div class="comment-box{{ post.id }}">
+                                {% for comment in post.comments.all %}
+                                {% if forloop.counter == count %}<button type="button" name="load_comments"
+                                    style="width: 98%;" data-type="comments" data-post-id="{{ post.id }}"
+                                    data-count="{{ count }}" data-count2="{{ count2 }}" class="btn load_comments">Load
+                                    more comments </button>
+
+                                {% elif forloop.counter > count %}
+                                <p></p>
+                                {% else %}
+                                <span class="comment{{comment.id}}">
+                                    <div class="row">
+                                        <div class="card-user col-12">
+                                            <a href="/profile/{{comment.user }}">
+                                                <span><img class="avatar"
+                                                        src="{% static comment.user.user_details.profile_image %}"
+                                                        style="height: 50px; width: 50px;" alt="Card image"></span>
+                                                <span>{{ comment.user.user_details.name }}</span></a>
+                                            <span style="font-size: 11px;">{{ comment.comment_text }}</span>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-2"></div>
+                                        <div style="padding-right: 5px;">
+                                            <a href="javascript:void(0);" class="reply"
+                                                data-comment-id="{{ comment.id }}">
+                                                reply
+                                            </a>
+                                        </div>
+                                        <div class="" style="padding-right: 5px;">
+                                            <a href="javascript:void(0);"
+                                                class="comment-like like-button {% if user in comment.comment_likers.all %}is-active{% endif %}"
+                                                data-id="{{ comment.id }}" data-reply-id="null"
+                                                data-post-id="{{ post.id }}" data-like-on='comment'
+                                                style="width: 18px;height: 18px; color:black">
+                                                <i class="tim-icons icon-heart-2  not-liked bouncy"
+                                                    style="font-size: 10px;"></i>
+                                                <i class="tim-icons icon-heart-2 is-liked bouncy"
+                                                    style="font-size: 10px;"></i>
+                                                <span class="like-overlay"></span>
+                                            </a>
+                                        </div>
+                                        <div style="padding-right: 5px;">
+                                            <p id="comment_like_count{{comment.id}}">
+                                                {{comment.like_count}}
+                                            </p>
+                                        </div>
+                                        <div style="padding-right: 5px;">
+                                            <div class="dropdown">
+                                                <button type="button"
+                                                    class="btn btn-default dropdown-toggle btn-link btn-icon"
+                                                    data-toggle="dropdown" aria-expanded="false">
+                                                    <i class="tim-icons icon-settings-gear-63"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end"
+                                                    style="position: absolute; transform: translate3d(-133px, 22px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item" href="#">Report</a>
+                                                    {% if comment.user == user %}<a class="delete dropdown-item"
+                                                        data-delete-t="comment" data-id="{{ comment.id }}"
+                                                        data-post-id="{{ post.id }}"
+                                                        href="javascript:void(0)">Delete</a> {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="" style="padding-right: 5px;  right: 10px;">
+                                            <p style="font-size: 9px;">
+                                                {{ comment.created_on }}
+                                            </p>
+                                        </div>
+                                        <div class="reply-box{{comment.id}}" style="margin-left: 15px;">
+                                            {% for reply in comment.replies.all %}
+                                            {% if forloop.counter == count2 %}<button type="button" name="load_comments"
+                                                style="width: 98%;" data-type="replies" data-post-id="{{ post.id }}"
+                                                data-count="{{ count }}" data-count2="{{ count2 }}"
+                                                class="btn load_comments">Load more comments </button>
+
+                                            {% elif forloop.counter > count2 %}
+                                            <p></p>
+                                            {% else %}
+                                            <span class="reply{{ reply.id }}">
+                                                <div class="card-user col-12">
+                                                    <a href="/profile/{{reply.user }}">
+                                                        <span><img class="avatar"
+                                                                src="{% static reply.user.user_details.profile_image %}"
+                                                                style="height: 40px; width: 40px;"
+                                                                alt="Card image"></span>
+                                                        <span
+                                                            style="font-size: 13px; color: black">{{ reply.user.user_details.name }}</span></a>
+                                                    <span
+                                                        style="font-size: 11px; color: black;">{{ reply.reply_text }}</span>
+                                                </div>
+
+                                                <div class="row" style="margin-left:30px ;">
+                                                    <div style="padding-right: 5px;">
+                                                        <a href="javascript:void(0);">
+                                                            reply
+                                                        </a>
+                                                    </div>
+                                                    <div class="" style="padding-right: 5px;">
+                                                        <a href="javascript:void(0);"
+                                                            class="comment-like like-button {% if user in reply.reply_likers.all %}is-active{% endif %}"
+                                                            data-reply-id="{{reply.id}}" data-post-id="{{ post.id }}"
+                                                            data-id="{{ comment.id }}" data-like-on='reply'
+                                                            style="width: 18px;height: 18px; color:black">
+                                                            <i class="tim-icons icon-heart-2 material-icons not-liked bouncy"
+                                                                style="font-size: 10px;"></i>
+                                                            <i class="tim-icons icon-heart-2 material-icons is-liked bouncy"
+                                                                style="font-size: 10px;"></i>
+                                                            <span class="like-overlay"></span>
+                                                        </a>
+                                                    </div>
+                                                    <div style="padding-right: 5px;">
+                                                        <p id="reply_like_count{{ reply.id }}">
+                                                            {{ reply.like_count }}
+                                                        </p>
+                                                    </div>
+                                                    <div style="padding-right: 5px;">
+                                                        <div class="dropdown">
+                                                            <button type="button"
+                                                                class="btn btn-default dropdown-toggle btn-link btn-icon"
+                                                                data-toggle="dropdown" aria-expanded="false">
+                                                                <i class="tim-icons icon-settings-gear-63"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-left"
+                                                                x-placement="bottom-end"
+                                                                style="position: absolute; transform: translate3d(-133px, 22px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                                <a class="dropdown-item" href="#">Action</a>
+                                                                {% if reply.user == user %}<a
+                                                                    class="delete dropdown-item" data-delete-t="reply"
+                                                                    data-id="{{ reply.id }}"
+                                                                    data-post-id="{{ post.id }}"
+                                                                    href="javascript:void(0)">Delete</a> {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <p style="font-size: 9px;">
+                                                            {{ reply.created_on }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                            {%endif%}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div id="reply_input{{ comment.id }}" style="display: none;">
+                                        <div class="row">
+                                            <div class="col-10">
+                                                <div class="form-group">
+                                                    <input type="text" style="border-radius: 0; " class="form-control "
+                                                        id="reply-input{{ comment.id }}" placeholder="comment...">
+                                                </div>
+                                            </div>
+                                            <div class="">
+                                                <button class="reply-button btn-danger animation-on-hover"
+                                                    style="padding:7px;" data-post-id="{{ post.id }}"
+                                                    data-comment-id="{{ comment.id }}">
+                                                    <i class="tim-icons icon-send"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <hr>
+
+                        <div class="top-right" style="right: 0px;top: 24px;">
+                            <div class="dropdown">
+                                <button type="button" style=""
+                                    class=" btn btn-default dropdown-toggle btn-link btn-icon" data-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <i class="tim-icons icon-settings-gear-63"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end"
+                                    style="position: absolute; transform: translate3d(-133px, 22px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                    <a class="dropdown-item" href="/single_post/{{ post.id }}">Go to post</a>
+                                    {% if post.user == user %}<a class="delete dropdown-item" data-delete-t="post"
+                                        data-id="{{ post.id }}" data-post-id="{{ post.id }}"
+                                        href="javascript:void(0)">Delete</a>
+                                    {% endif %}
+                                    <a class="dropdown-item pin" href="javascript:void(0)"
+                                        data-id="{{ post.id }}">{% if post in user.user_details.pinned.all %}<span
+                                            class="pin{{post.id}}">un pin</span>{% else %}<span
+                                            class="pin{{post.id}}">pin</span>{% endif %}</a>
+                                    <a class="dropdown-item " href="#">Remove Data</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comment_input">
+                            <div class="row">
+                                <div class="col-10">
+                                    <div class="form-group">
+                                        <input type="text" style="border-radius: 0; " class="form-control "
+                                            id="comment-input{{ post.id }}" placeholder="comment...">
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <button class="comment-button btn-danger animation-on-hover" style="padding:7px;"
+                                        data-post-id="{{ post.id }}">
+                                        <i class="tim-icons icon-send"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% if post.post_type == 'test' %}
+                    <div class="col-lg-3 col-md-3">
+
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>

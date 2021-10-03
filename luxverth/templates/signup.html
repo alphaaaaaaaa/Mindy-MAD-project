@@ -1,0 +1,94 @@
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<!--=======Font Open Sans======-->
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+	<!--StyleSheet-->
+	<link href="{% static 'css/black-dashboard.css' %}" rel="stylesheet" />
+	<link href="{% static 'css/style1.css' %}" rel="stylesheet" />
+	<link href="{% static 'style.css' %}" rel="stylesheet" />
+</head>
+
+<body style="background-image: url('/static/img/14.jpg');">
+	<div class="container" style="margin-top: 100px;">
+		<div class="row">
+			<div class="col-lg-1">
+
+			</div>
+			<div class="col-lg-5">
+				<div class="booking-form">
+					<h1><span style="color:#b6c6ff;">Signup</span>
+						<span style="color:#2c5b91;">Form</span>
+					  </h1>
+					 
+				  <form action="/signup" method="POST">
+					{% csrf_token %}
+					{% if error != None %}
+					<p style="color: red">{{ error }}</p>
+
+					</p>
+					{% endif %}
+					{% for field in form %}
+					<p>
+					<div class="checkout__form__input">
+						<p style="color: black; text-align: left;">{{ field.label_tag }}<span>*</span></p>
+						{% render_field field class='form-control' %}
+						{% for error in field.errors %}
+							<p style="color: red">{{ error }}</p>
+							{% endfor %}
+							</p>
+					</div>
+					{% endfor %}
+					<br>
+					<div class="form-btn">
+						<button type="submit" name="signup" class="btn-warning btn">Sign Up</button>
+					</div>
+					<a href="/login" style="color:#b6c6ff;">Already have an account? login here</a>
+					<br>
+				</form>
+			  </div>
+				<br>
+				<div class="row container" style="margin-left: 20px;">
+					<div class="col-5">
+						<img src="{% static 'img/icons/GoogleplaySoon.png'%}" >
+					</div>
+					<div class="col-5">
+						<img src="{% static 'img/icons/ComingSoon-AppStore-768x232.png'%}" >
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 col-12" style="text-align: center;">
+				<span style="color:#b6c6ff; font-size: 60px;"><b>MIN<span style="color:#b6c6ff;">DLY</span></b></span>
+				<p style="color: black; font-size: 18px;">ou will probably have to register first, sign up or leave some information behind. You will have to
+					use some sort of login form to do anything on ...
+
+					60 Beautiful HTML CSS Sign up & Registration Form Templatesfreshdesignweb.com › CSS3 › CSS
+					It will helping you to save time for design login form or registration form in your project.
+					Registration form have different types are used intensively on registration ...</p>
+			</div>
+		</div>
+	</div>
+
+	<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('.tab a').on('click', function (e) {
+				e.preventDefault();
+
+				$(this).parent().addClass('active');
+				$(this).parent().siblings().removeClass('active');
+
+				var href = $(this).attr('href');
+				$('.forms > form').hide();
+				$(href).fadeIn(500);
+			});
+		});
+	</script>
+</body>
+
+</html>

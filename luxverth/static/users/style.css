@@ -1,0 +1,80 @@
+/* Modified from: https://github.com/mukulkant/Star-rating-using-pure-css */
+
+.rating {
+    display: inline-block;
+    width: 100%;
+    margin-top: -40px;
+    margin-left: -120px;
+    padding-top: 40px;
+    text-align: center;
+  }
+  
+  .like,
+  .dislike {
+    display: inline-block;
+    cursor: pointer;
+    margin: 10px;
+  }
+  
+  .like:hover {
+    transition:all .2s ease-in-out;
+    transform: scale(1.1);
+  }
+  
+  .dislike:hover {
+    transition: all .2s ease-in-out;
+    transform: scale(1.1);
+  }
+  .like.active {
+    color: #008000;
+  }
+  .dislike.active {
+    color: #FF0000;
+    
+  }
+  
+  
+  
+  
+  .face {
+    display: inline-block;
+    width: 100%;
+    margin-top: -40px;
+    padding-top: 40px;
+    text-align: center;
+  }
+  .love,
+  .smile,
+  .angry{
+    
+    display: inline-block;
+    cursor: pointer;
+    margin: 10px;
+  }
+  .love:hover {
+      color: #008000;
+    transition:all .2s ease-in-out;
+    transform: scale(1.1);
+  }
+  
+  .smile:hover {
+        color: #FFFF00;
+    transition: all .2s ease-in-out;
+    transform: scale(1.1);
+  }
+  .angry:hover {
+    color: #FF0000;
+    transition: all .2s ease-in-out;
+    transform: scale(1.1);
+  }
+  .love.active {
+    color: #008000;
+  }
+  .smile.active {
+    color: #FFFF00;
+    
+  }
+  .angry.active {
+    color: #FF0000;
+    
+  }

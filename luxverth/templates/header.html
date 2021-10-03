@@ -1,0 +1,244 @@
+{% load static %}
+<div class="sidebar" id="sidebar">
+  <style>
+    a.notif {
+  position: relative;
+  display: block;
+  height: 50px;
+  width: 50px;
+  background-size: contain;
+  text-decoration: none;
+}
+.num {
+  position: absolute;
+  right: 7px;
+  top: -1px;
+  padding: 0px 7px 0px 7px;
+  color: #fff;
+  border-radius: 100px;
+  background-color: brown;
+}
+  </style>
+    <!--
+        Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red"
+    -->
+    <div class="sidebar-wrapper">
+      <div class="logo">
+        <a href="javascript:void(0)" class="simple-text logo-mini">
+            <span><img class="avatar" src="{% static user.user_details.profile_image  %}" style="height: 40px; width: 40px;"
+                alt="Card image"></span>
+        </a>
+        <a href="/profile/{{ user}}" class="simple-text logo-normal">
+          {{ user.user_details.name }}
+        </a>
+      </div>
+      <ul class="nav">
+        <li class="active ">
+          <a  href="/newsfeed/" >
+            <i class="tim-icons icon-single-copy-04" ></i> 
+            <p>Newsfeed</p>
+          </a>
+        </li>
+        <li>
+          <a href="/messenger" class="notif">
+            <span class="num"><span id="num">{{user.user_details.message_notification_count}}</span></span>
+            <i class="tim-icons icon-chat-33"></i>
+            <p>Messages</p>
+          </a>
+        </li>
+        <li>
+          <a href="/calender">
+            <i class="tim-icons icon-calendar-60"></i>
+            <p>Calendar</p>
+          </a>
+        </li>
+        <li>
+          <a href="/notepad">
+            <i class="tim-icons icon-notes"></i>
+            <p>NotePad</p>
+          </a>
+        </li>
+        <li>
+          <a href="/profile/{{ user}}">
+            <i class="tim-icons icon-badge"></i>
+            <p>User Profile</p>
+          </a>
+        </li>
+        <li>
+          <a href="/edit-profile">
+            <i class="tim-icons icon-single-02"></i>
+            <p>Edit Profile</p>
+          </a>
+        </li>
+        
+        <li>
+          <a data-toggle="collapse" href="#tablesExamples" class="collapsed" aria-expanded="false">
+            <i class="tim-icons icon-settings"></i>
+            <p>
+              Settings
+              <b class="caret"></b>
+            </p>
+          </a>
+          <div class="collapse" id="tablesExamples" style="">
+            <ul class="nav">
+              <li>
+                <a href="/edit-profile">
+                  <span class="sidebar-mini-icon">RT</span>
+                  <span class="sidebar-normal"> Edit Profile </span>
+                </a>
+              </li>
+              <li>
+                <a href="/change_pass">
+                  <span class="sidebar-mini-icon">ET</span>
+                  <span class="sidebar-normal"> change password </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+      
+      </ul>
+      <br>
+      <br>
+      <br>
+      <br>
+    </div>
+  </div>
+  <div class="main-panel">
+    <!-- Navbar -->
+    <nav class=" navbar navbar-expand-lg navbar-absolute navbar-transparent">
+      <div class="container-fluid">
+        <div class="navbar-wrapper">
+          <div class="navbar-toggle d-inline">
+            <button type="button" onclick="myFunction()" class="navbar-toggler">
+              <span class="navbar-toggler-bar bar1"></span>
+              <span class="navbar-toggler-bar bar2"></span>
+              <span class="navbar-toggler-bar bar3"></span>
+            </button>
+          </div>
+          <a class="navbar-brand" href="javascript:void(0)" style="color: #6586fd;"><span style=" font-size: 25px;"><b>MIN<span style="">DLY</span></b></span></a>
+        </div>
+        
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
+          aria-expanded="false" aria-label="Toggle navigation">
+          <i class="tim-icons icon-sound-wave"></i>
+        </button>
+        <div class="navbar-toggle d-inline">
+          <button type="button" onclick="myFunction2()" class="navbar-toggler">
+            <span class="navbar-toggler-bar bar1"></span>
+            <span class="navbar-toggler-bar bar2"></span>
+            <span class="navbar-toggler-bar bar3"></span>
+          </button>
+        </div>
+        <div class="collapse navbar-collapse" id="navigation" style="">
+          <ul class="navbar-nav ml-auto ">
+            <li class="search-bar input-group">
+              <button class="btn btn-link" id="search-button" data-toggle="modal" data-target="#searchModal"><i
+                  class="tim-icons icon-zoom-split"></i>
+                <span class="d-lg-none d-md-block">Search</span>
+              </button>
+            </li>
+            <li class="dropdown nav-item">
+              <a href="javascript:void(0)" class="dropdown-toggle nav-link bell" data-toggle="dropdown">
+              <div class="noti {% if user.user_details.notification_bell  %}notification{%else%}{%endif%} d-none d-lg-block d-xl-block" ></div>
+                <i class="tim-icons icon-bell-55"></i>
+                <p class="d-lg-none">
+                  Notifications
+                </p>
+              </a>
+              <ul  class="dropdown-menu dropdown-menu-right dropdown-navbar notification_list_body scrollbar" id="style-4"
+                style="min-width: 330px;max-height: 360px;min-height: 100px;">
+                <span class="notification_list force-overflow">
+                {% for notification in user.user_details.notifications.all reversed %}
+                <li class="nav-link">
+                  <a href="{% if notification.notify_type != 'Started following you' %}/single_post/{{ notification.notify_post.id }}{%endif%}" class="nav-item dropdown-item">
+                    <div class="row">
+                      <div class="card-user col-12">
+                        <span><img class="avatar" src="{% static notification.user.user_details.profile_image %}" style="height: 40px; width: 40px;"
+                            alt="Card image"></span>
+                        <span>{{notification.user.user_details.name}}</span>
+                        <span style="font-size: 11px; ">
+                          <P>{{notification.notify_type}}
+                            {% if notification.notify_post.post_type == 'photo' %}
+                            <img src="{% static notification.notify_post.image %}"
+                              style="height: 50px; width: 50px; float: right;" alt="Card image">
+                            {% elif notification.notify_post.post_type == 'video' %}  
+                            <video class="card-img" style="height: 50px; width: 50px; float: right;">
+                              <source src="{% static notification.notify_post.image %}" type="video/mp4">
+                              Your browser does not support HTML5 video.
+                            </video>
+                            {% endif %}
+                            </P>
+                            <p>
+                              {% if notification.notify_reply %}
+                              "{{ notification.notify_reply.reply_text }}"
+                              {% elif notification.notify_message %}
+                              "{{ notification.notify_message.content }}"
+                              {% endif %}
+                              {% if notification.notify_comment %}
+                              "{{ notification.notify_comment.comment_text }}"
+                              {% endif %}
+                            </p>
+                        </span>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+                {% endfor %}
+              </span>
+              
+              </ul>
+            </li>
+            <li class="dropdown nav-item">
+              <a href="javascript:void(0)" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                <i class="tim-icons icon-sound-wave"></i>
+                <p class="d-lg-none">
+                  more
+                </p>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-right dropdown-navbar">
+                <li class="nav-link"><a href="#" class="nav-item dropdown-item"  data-toggle="modal"
+                  data-target=".post-modal-sm">createpost</a></li>
+              </ul>
+            </li>
+            <li class="dropdown nav-item">
+              <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                <div class="photo">
+                  <img src="{% static user.user_details.profile_image  %}" alt="Profile Photo">
+                </div>
+                <b class="caret d-none d-lg-block d-xl-block"></b>
+                <p class="d-lg-none">
+                  Log out
+                </p>
+              </a>
+              <ul class="dropdown-menu dropdown-navbar">
+                <li class="nav-link"><a href="javascript:void(0)" class="nav-item dropdown-item">Profile</a></li>
+                
+                <li class="dropdown-divider"></li>
+                <li class="nav-link"><a href="{% url 'logout' %}" class="nav-item dropdown-item">Log out</a></li>
+              </ul>
+            </li>
+            <li class="separator d-lg-none"></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+ 
+    <div class="modal modal-search fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModal"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <i style="margin-top: 12px;" class="fas fa-search search-icon" aria-hidden="true"></i>
+                                       <input type="text"  class="user-input form-control" placeholder="SEARCH">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <i  class="tim-icons icon-simple-remove"></i>
+            </button>
+          </div>
+            <div class="replaceable-content">
+              {% include 'search_result.html' %}
+            </div>
+          </div>
+        </div>
+      </div>

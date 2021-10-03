@@ -1,0 +1,655 @@
+{% load static %}
+{% include 'base.html' %}
+{% load i18n %}
+
+
+<link href="{% static 'dist/css/swipe.min.css' %}" type="text/css" rel="stylesheet">
+<style>
+    body {
+        overflow: hidden;
+    }
+
+    .pimage {
+        opacity: 1;
+        width: 100%;
+        height: auto;
+        transition: .5s ease;
+        backface-visibility: hidden;
+    }
+
+    .pimage:hover {
+        opacity: 0.3;
+    }
+
+    .read .data p {
+        color: rgb(172, 172, 172);
+    }
+
+    .filterDiscussionsBtn.active {
+        color: #2196F3;
+        padding: 8px 20px;
+        background: #f5f5f5;
+        border-radius: 100px;
+    }
+
+    .filterDiscussionsBtn {
+        padding: 8px 20px;
+        background: 0 0;
+        border-radius: 100px;
+        color: grey;
+        font-size: 15px;
+        font-weight: 500;
+    }
+</style>
+<div class="rtl menu-on-right">
+
+    <div class="sidebar" id="right_sidebar">
+        <!--
+              Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red"
+          -->
+        <div class="sidebar-wrapper scrollbar sidebarr" id="style-4"
+            style="background-color: white; border-radius: 5px;">
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="tab-content">
+
+                        <!-- Start of Discussions -->
+                        <div id="discussions" class="tab-pane fade active show">
+                            <div class="search">
+                                <form class="form-inline position-relative">
+                                    <input type="search" class="form-control" id="conversations"
+                                        placeholder="Search for conversations...">
+                                    <button type="button" class="btn btn-link loop"><i
+                                            class="material-icons">search</i></button>
+                                </form>
+                                <button class="btn create" data-toggle="modal" data-target="#startnewchat"><i
+                                        class="material-icons">search</i></button>
+                                        <button style="margin-right: 60px;" class="btn create" data-toggle="modal" data-target="#creategroup"><i
+                                            class="material-icons" data-toggle="tooltip"
+                                            data-placement="top" title="create">create</i></button>
+                                
+                            </div>
+                            <div class="list-group sort">
+                                
+                                <a href="#" class="active show filterDiscussionsBtn " data-toggle="list"
+                                    data-filter="groups">groups<a>
+                                        
+                                <a href="#" class="filterDiscussionsBtn" data-toggle="list" data-filter="chat">chats</a>
+                                        
+                            </div>
+                            <div class="discussions">
+
+                                <div class="list-group" id="chats" role="tablist">
+                                    <h1>Discussions</h1>
+                                    {% for chat in chat_list %}
+                                    {% if chat.user1 == request.user %}
+                                    {% trans chat.user2.username as u %}{% trans chat.user2.user_details.profile_image as user_image %}
+                                    {% trans chat.u1_status as status %}{% trans chat.user2.user_details.name as user_name %}
+                                    {% else %}
+                                    {% trans chat.user1.username as u %}{% trans chat.user1.user_details.profile_image as user_image %}
+                                    {% trans chat.u2_status as status %}{% trans chat.user1.user_details.name as user_name %}
+                                    {% endif %}
+                                    <a href="/messenger/{{ u }}"
+                                        class="filterDiscussions {{status}} chat single "
+                                        style="{% if status == 'unread' %} border-bottom:2px rgb(226, 51, 51) solid; {% endif %} {% if u == user_profile.user.username  %} border-bottom:2px rgb(51, 127, 226) solid; {% endif %} "
+                                        id="list-chat-list" role="tab">
+                                        <img class="avatar-md" src="{% static user_image %}" data-toggle="tooltip"
+                                            data-placement="top" title="{{ u }}" alt="avatar">
+
+                                        <div class="data">
+                                            <h5>{{user_name}}</h5>
+                                            {% if chat.last_text_message == None  %}
+                                            <p>Seems people are shy to start the chat. Break the ice send the first
+                                                message.</p>
+                                            {% else %}
+                                            <span
+                                                style="color:rgb(105, 200, 255);">{{ chat.last_text_message.timestamp|date:'D P' }}</span>
+                                            <p>{{ chat.last_text_message.content | slice:":60"}}...</p>
+                                            {% endif %}
+                                        </div>
+                                    </a>
+                                    {% endfor %}
+                                    {% for chat in group_list %}
+                                    
+                                    <a href="/messenger/{{ chat.id }}?t=group"
+                                        class="filterDiscussions all read groups single "
+                                        style="border-bottom:2px rgb(51, 127, 226) solid;"
+                                        id="list-chat-list" role="tab">
+                                        <img class="avatar-md" src="{{ chat.image.url }}" data-toggle="tooltip"
+                                            data-placement="top" title="{{ chat.group_name }}" alt="avatar">
+
+                                        <div class="data">
+                                            <h5>{{chat.group_name}}</h5>
+                                            {% if chat.last_text_message == None  %}
+                                            <p>Seems people are shy to start the chat. Break the ice send the first
+                                                message.</p>
+                                            {% else %}
+                                            <span
+                                                style="color:rgb(105, 200, 255);">{{ chat.last_text_message.timestamp|date:'D P' }}</span>
+                                            <p>{{ chat.last_text_message.content | slice:":60"}}...</p>
+                                            {% endif %}
+                                        </div>
+                                    </a>
+                                    {% endfor %}
+                                    <a href="#list-chat" class="filterDiscussions all unread single">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="sidebar-mini">
+    <div class="wrapper">
+
+        {% include 'header.html' %}
+        <div class="content">
+            <div class="col-lg-9">
+
+                <!-- End of Add Friends -->
+                <div class="modal fade" id="group" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="requests">
+                            <div class="title">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <i class="tim-icons icon-simple-remove"></i>
+                                </button>
+                            </div>
+                            <div class="content text-center">
+                                <div class="row justify-content-center">
+                                
+                                <img id="profile_image" src="{{ group.image.url }}" width="50%">
+                                
+                                </div>
+                                <div class="row justify-content-center">
+                                
+                                    <form id="form" action="/change_group_image" method="POST" enctype="multipart/form-data">
+                                        <input type="hidden" name="id" id="id" value="{{ group.id }}">
+                          
+                                        {% csrf_token %}
+                                        {% if group.group_admin.username == request.user.username %}
+                                        <input type="file" accept="image/*" name="myfile" id="change_image" onchange="loadFile(event)"
+                                          style="display: none;">
+                                        <label class="btn btn-warning animation-on-hover" style="width:100%; display: block; width: 100%;padding: 20px;" for="change_image"
+                                       >Upload Image</label>
+                                        
+                                        {% endif %}
+                                      </form>
+                                    </div>
+                                group admin: {{  group.group_admin }}
+                                <p>Group Description:</p>
+                                <p>{{ group.description }}</p>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Start of Create Chat -->
+
+                <div class="modal fade" id="startnewchat" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="requests">
+                            <div class="title">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <i class="tim-icons icon-simple-remove"></i>
+                                </button>
+                            </div>
+                            <div class="content">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="participant">Search Groups:</label>
+                                        <i style="margin-top: 12px;" class="fas fa-search search-icon"
+                                            aria-hidden="true"></i>
+                                        <input type="text" class="chat-group-input form-control" placeholder="SEARCH">
+
+                                    </div>
+                                    <div class="replaceable-content3">
+                                        {% include 'chat_group_search.html' %}
+                                    </div>
+
+                                </form>
+                                <form>
+                                    <div class="form-group">
+                                        <label for="participant">Search for users:</label>
+                                        <i style="margin-top: 12px;" class="fas fa-search search-icon"
+                                            aria-hidden="true"></i>
+                                        <input type="text" class="chat-user-input form-control" placeholder="SEARCH">
+
+                                    </div>
+                                    <div class="replaceable-content2">
+                                        {% include 'chat_search.html' %}
+                                    </div>
+
+                                </form>
+                                
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Start of Create Chat -->
+
+                <div class="modal fade" id="creategroup" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="requests">
+                            <div class="title">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <i class="tim-icons icon-simple-remove"></i>
+                                </button>
+                            </div>
+                            <div class="content">
+                                
+                            <label>Create Group</label>
+                                <form action="/creategroup" method="POST">
+                                    {% csrf_token %}
+                                    <label>Group Name*</label>
+                                    <input type="text" class="form-control" name="name" >
+                                    <br>
+                                    <label>Group Description*</label>
+                                    <textarea class="form-control" name="description"></textarea>
+                                    <br>
+                                    
+                                    <button type="submit" style="display: block; width: 100%;padding: 20px;" class="btn btn-danger animation-on-hover">create</button>
+                                  </form>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End of Create Chat -->
+                <div class="main" >
+                    <div class="tab-content" id="nav-tabContent">
+                        <!-- Start of Babble -->
+                        <div class="babble tab-pane fade active show" id="list-chat" role="tabpanel"
+                            aria-labelledby="list-chat-list">
+                            {% if page == 'inbox' %}
+                            <div class="chat" id="chat1">
+                                <div class="content" id="content" style="overflow-y: auto;">
+                                    <div class="" style="top: 30%; margin-left: 32%;">
+                                        <hr>
+                                        <span style="color: grey;"><b>Start A Conversation</b></span>
+                                        <hr>
+                                        <a class="btn btn-success create" style="margin-left: 50px;" data-toggle="modal"
+                                            data-target="#startnewchat"><i class="material-icons">create</i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <!-- Start of Chat -->
+                            <div class="chat" id="chat1">
+                                <div class="top">
+                                    <div class="container">
+                                        <div class="col-md-12">
+                                            <div class="inside">
+                                                <a href="#"><img class="avatar-md"
+                                                        src="{% if group.id != None %}{{ group.image.url }}{% else %}{% static user_profile.profile_image %} {% endif %}"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="{{user_profile.status}}" alt="avatar"></a>
+
+                                                <div class="data">
+                                                    <h5>{% if group.id != None %}<a href="#" data-toggle="modal" data-target="#group">{{ group.group_name }}{% else %}<a href="#">{{ user_profile.name}} {% endif %}</a></h5>
+                                                </div>
+                                                {% if group.id == None %}
+                                                <div class="dropdown">
+                                                    
+                                                    <a href="#" data-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false"><i class="material-icons md-30"
+                                                            style="color: grey;">more_vert</i></a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+
+                                                        <a href="/clear_chat/{{ chat_id.id }}"
+                                                            class="dropdown-item"><i
+                                                                class="material-icons">clear</i>Clear History</a>
+                                                        
+
+                                                    </div>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="content" id="content" style="overflow-y:scroll;">
+                                    <div class="container chat-scroll">
+                                        <div class="col-md-12 chat-box">
+
+                                            {% if messages == None %}
+                                            <div class="" style="top: 30%; margin-left: 32%;">
+                                                <hr>
+                                                <span style="color: grey;"><b>Start A Conversation</b></span>
+                                                <hr>
+                                                <button class="btn btn-success create" style="margin-left: 50px;"
+                                                    data-toggle="modal" data-target="#startnewchat"><i
+                                                        class="material-icons">create</i></button>
+                                            </div>
+                                            {% elif group.id != None %}
+                                            {% for message in group.messages.all %}
+                                            {% if message.user == request.user %}
+                                            <div class="message me">
+                                                <div class="text-main">
+                                                    <div class="text-group me">
+                                                        <div class="text me">
+                                                            <p>{{ message.content }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <span style="color: grey;">{{ message.timestamp }}</span>
+                                                </div>
+                                            </div>
+                                            {% else %}
+                                            <div class="message">
+                                                <img class="avatar-md" src="{% static message.user.user_details.profile_image %}"
+                                                    data-toggle="tooltip" data-placement="top"
+                                                    title="{{ user_profile.status }}" alt="avatar">
+                                                <div class="text-main">
+                                                    <div class="text-group">
+                                                        <div class="text">
+                                                            <p>{{ message.content }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <span style="color: grey;">{{ message.timestamp }}</span>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                            {% endfor %}
+                                            {% else %}
+                                            {{count}}
+                                            {{messages.next.id}}
+                                            {% if messages.5.id != null %}
+                                            <a href="javascript:void(0)" id="load_messages" data-count="{{count}}">load
+                                                more</a>
+                                            {% endif %}
+                                            
+                                            {% for message in messages reversed %}
+                                            {% if message.user == request.user %}
+                                            <div class="message me">
+                                                <div class="text-main">
+                                                    <div class="text-group me">
+                                                        <div class="text me">
+                                                            <p>{{ message.content }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <span style="color: grey;">{{ message.timestamp }}</span>
+                                                </div>
+                                            </div>
+                                            {% else %}
+                                            <div class="message">
+                                                <img class="avatar-md" src="{% static user_profile.profile_image %}"
+                                                    data-toggle="tooltip" data-placement="top"
+                                                    title="{{ user_profile.status }}" alt="avatar">
+                                                <div class="text-main">
+                                                    <div class="text-group">
+                                                        <div class="text">
+                                                            <p>{{ message.content }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <span style="color: grey;">{{ message.timestamp }}</span>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                            {% endfor %}
+                                            {% endif %}
+
+                                        </div>
+                                        <div id="typing" class="message" style="display:none ;">
+                                            <img class="avatar-md" src="{% static user_profile.profile_image %}"
+                                                data-toggle="tooltip" data-placement="top" title="Keith" alt="avatar">
+                                            <div class="text-main">
+                                                <div class="text-group">
+                                                    <div class="text typing">
+                                                        <div class="wave">
+                                                            <span class="dot"></span>
+                                                            <span class="dot"></span>
+                                                            <span class="dot"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <br>
+                                        {% if chat_id.user1 == request.user %}
+                                        {% trans chat_id.u2_status as status %}
+                                        {% else %}
+                                        {{ chat_id{% trans chat_id.u1_status as status %}
+                                        {% endif %}
+                                            
+                        {% if messages.0.id != None %}
+                        {% if status == 'read' %}<p id="seen"><i class="material-icons"
+                                style="color: black;">check</i>seen</p>{%else%}<p id="seen"></p>{%endif%}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="col-md-12">
+                        <div class="bottom">
+                            <form class="position-relative w-100">
+                                <textarea id="chat-message-input" class="form-control emojionearea1"
+                                    placeholder="Start typing for reply..." rows="1"></textarea>
+
+                            </form>
+                            <button id="chat-message-submit" type="submit" class="send"
+                                style="background: none; border: none;"><i class="material-icons">send</i></button>
+                            <label>
+                                <input type="file">
+                                <span class="btn attach d-sm-block d-none"><i
+                                        class="material-icons">attach_file</i></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% endif %}
+            <!-- End of Chat -->
+            <!-- Start of Call -->
+            <div class="call" id="call1">
+                <div class="content">
+                    <div class="container">
+                        <div class="col-md-12">
+                            <div class="inside">
+                                <div class="panel">
+                                    <div class="participant">
+                                        <img class="avatar-xxl" src="{% static 'dist/img/avatars/avatar-male-4.jpg' %}"
+                                            alt="avatar">
+                                        <span>Connecting</span>
+                                    </div>
+                                    <div class="options">
+                                        <button class="btn option"><i class="material-icons md-30">mic</i></button>
+                                        <button class="btn option"><i class="material-icons md-30">videocam</i></button>
+                                        <button class="btn option call-end"><i
+                                                class="material-icons md-30">call_end</i></button>
+                                        <button class="btn option"><i
+                                                class="material-icons md-30">person_add</i></button>
+                                        <button class="btn option"><i
+                                                class="material-icons md-30">volume_up</i></button>
+                                    </div>
+                                    <button class="btn back" name="1"><i class="material-icons md-24">chat</i></button>
+                                </div>
+                                <input type='button' id='page_load' hidden>
+                                <input type='button' id='key_up' hidden>
+                                <input type='button' id='key_down' hidden>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div> <!-- Layout -->
+</div>
+</div>
+</div>
+<!-- Bootstrap/Swipe core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+
+<script>window.jQuery || document.write('<script src="dist/js/vendor/jquery-slim.min.js"><\/script>')</script>
+<script src="{% static 'dist/js/vendor/popper.min.js' %}"></script>
+<script src="{% static 'dist/js/swipe.min.js' %}"></script>
+<script src="{% static 'js/websocket.js' %}"> </script>
+<script>
+    $('body').on('click', '#load_messages', function (event) {
+        var count = parseInt(this.getAttribute('data-count'));
+        $.ajax({
+            success: function (data) {
+                $('.chat-scroll').load('/load_messages/'+'{{ user_profile.user.username }}'+"/"+count )
+            }
+        });
+    });
+    function scrollToBottom(el) { el.scrollTop = el.scrollHeight; }
+    scrollToBottom(document.getElementById('content'));
+    var username = '{{ request.user.username }}'
+    const messageSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/messanger/'
+        + '{{chat_id.id}}'
+        + '/'
+
+    );
+
+    messageSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        if (data['type'] == 'seen' & data['to'] == '{{ request.user }}') {
+            $('#seen').html(
+                '<i class="material-icons" style="color: black;">check</i>seen'
+            )
+            function scrollToBottom(el) { el.scrollTop = el.scrollHeight; }
+            scrollToBottom(document.getElementById('content'));
+        }
+        else if (data['type'] == 'typing') {
+            function scrollToBottom(el) { el.scrollTop = el.scrollHeight; }
+            scrollToBottom(document.getElementById('content'));
+            if (data['to'] == '{{ request.user }}') {
+                var typing = document.getElementById('typing');
+                typing.style.display = "none";
+            }
+
+
+        }
+        else if (data['type'] == 'key_down') {
+            if (data['to'] == '{{ request.user }}') {
+                var typing = document.getElementById('typing');
+                typing.style.display = "block";
+            }
+
+        }
+        else {
+            const data = JSON.parse(e.data);
+            var message = data['message'];
+            var author = message['author'];
+            if (author == username) {
+                $('.chat-box').append(
+                    '<div class="message me">' +
+                    '<div class="text-main">' +
+                    '<div class="text-group me">' +
+                    '<div class="text me">' +
+                    '<p>' + message['content'] + '</p>' +
+                    '</div>' +
+                    '</div>' +
+                    '<span style="color: grey;">' + message['timestamp'] + '</span>' +
+                    '</div>' +
+                    '</div>'
+                )
+            } else {
+                $('.chat-box').append('<div class="message">' +
+                    '<img class="avatar-md" src="/static/' + message['profile_image'] + '"' +
+                    ' data-toggle="tooltip" data-placement="top" title="Keith"' +
+                    ' alt="avatar">' +
+                    '<div class="text-main">' +
+                    '<div class="text-group">' +
+                    '<div class="text">' +
+                    '<p>' + message['content'] + '</p>' +
+                    '</div>' +
+                    '</div>' +
+                    '<span style="color: grey;">' + message['timestamp'] + '</span>' +
+                    '</div>' +
+                    '</div>'
+                )
+            }
+
+            if (data['seen'] == 'unread') {
+                $('#seen').html('')
+
+            } else {
+                $('#seen').html(
+                    '<p id="seen"><i class="material-icons" style="color: black;">check</i><i>seen</p > '
+                )
+            }
+            function scrollToBottom(el) { el.scrollTop = el.scrollHeight; }
+            scrollToBottom(document.getElementById('content'));
+        }
+
+    };
+
+    messageSocket.onclose = function (e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+    $(document).ready(function () {
+
+    });
+    '{% if group.id != None %}'
+        var to = '{{ group.id }}'
+        var t = 'group'
+        '{% else %}'
+        var t = 'user'
+        var to = '{{ user_profile.user.username }}'
+        '{% endif %}'
+    $('body').on('click', '#key_up', function (event) {
+        console.log('typing');
+        messageSocket.send(JSON.stringify({
+            'type': 'typing',
+            'command': 'new_message',
+            'to': to,
+            't':t
+
+        }));
+    });
+    $('body').on('click', '#key_down', function (event) {
+        messageSocket.send(JSON.stringify({
+            'type': 'key_down',
+            'command': 'new_message',
+            'to': to,
+            't':t
+        }));
+        setTimeout(function () {
+            $("#key_up").trigger('click');
+        }, 3000);
+    });
+    $('body').on('click', '#page_load', function (event) {
+        messageSocket.send(JSON.stringify({
+            'type': 'seen',
+            'command': 'new_message',
+            'to': to,
+            't':t
+        }));
+    });
+    $('body').on('click', '#chat-message-submit', function (event) {
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const message = messageInputDom.value;
+        
+        messageSocket.send(JSON.stringify({
+            'message': message,
+            'type': 'new_message',
+            'command': 'new_message',
+            'to': to,
+            't':t
+        }));
+        messageInputDom.value = '';
+    });
+    $(document).ready(function () {
+        setTimeout(function () {
+            $("#page_load").trigger('click');
+        }, 2000);
+    });
+</script>

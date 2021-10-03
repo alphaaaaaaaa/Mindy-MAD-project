@@ -1,0 +1,23 @@
+{% load static %}
+
+{% if artists %}
+<div class="modal-body" style="margin-top:-30px">
+    <ul>
+        {% for artist in artists %}
+        <div class="row">
+            <div class="col-12">
+                <span><a href="{% url 'profile' artist.user.username %}"><img class="avatar" src="{% static artist.profile_image %}" style="height: 50px; width: 50px;"
+                    alt="Card image"></a></span>
+                <span style="font-size: 13px;"><a href="{% url 'profile' artist.user.username %}">{{ artist.name }}</a></span>
+                
+                <span style="font-size: 11px; float:right;margin-top: 10px ;"><a href="/messenger/{{ artist.user }}" class="btn btn-danger animation-on-hover" style="display: block; width: 100%;padding: 10px;">
+                    <i class="tim-icons icon-check-2"></i> contact
+                </a>
+                </span>
+            </div>
+        </div>
+        <br>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}

@@ -1,0 +1,26 @@
+{% load static %}
+<div class="row">
+    asd
+{%  for person in people %}
+    <div class="col-lg-3 col-md-3 col-6">
+    <div class="card">
+        <img class="card-img" src="{% static person.user_details.profile_image %}" style="border-radius: 0;  "
+        alt="Card image"></a>
+        <div class="card-body" style="text-align: center;">
+            <h5 class="title"> {{ person.user_details.name }}</h5>
+            
+            <button class="btn btn-danger animation-on-hover" style="width: 100%;font-size: 12px;">
+              <i class="tim-icons icon-email-85"></i> contact
+            </button>
+            <span class="request{{ person.id }}" >
+              <button class="btn btn-warning animation-on-hover accept" data-id="{{ person.id }}" style="width: 100%;font-size: 11px;">
+                <i class="tim-icons icon-simple-remove"></i> Accept
+              </button>
+            </span>
+            
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+</div>
